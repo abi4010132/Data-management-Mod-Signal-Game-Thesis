@@ -11,6 +11,10 @@ In my experiment a total of 21 participants played 3 blocks of the Mod-Signal Ga
 
 Participants were seated in the same room separated by barriers. The barriers were used as a measure to prevent and discourage participants from looking at other participants' screen. The participants were also asked to put on headphones at the start of the experiment, this was done to make the mouse clicks less audible as the mouse clicks can be used to determine that they are playing with a human if the mouse clicks are followed by their game screen updating. A confederate was also present that pretended to play the Mod-Signal Game as a fourth participant. Since the Mod-Signal Game is a 2-player game and there are only 3 participants per session, the confederate is present to fool people into thinking that they are playing with a human when they are actually playing with the agent. To make sure that the participants are fooled, the confederate would pretend to play the game by clicking the mouse as well as pretend to fill in the questionnaires. To make sure this happened smoothly, the experimenter kept track of the agent and would message the confederate through whatsapp to notify them when they should start/stop clicking and when they should pretend to fill in the questionnaires.
 
+### Requirements
+To run the experiment you need to have access to the internet through a webbrowser (preferably FireFox). \
+To run the data analysis RStudio version 2023.06.01 and R version 4.1.2. The data analysis can simply be run by running all the cells in order for each R Markdown file.
+
 ### Running the game
 
 Running the experiment can be done at [harmendeweerd.nl/research/mod/mod.html](https://harmendeweerd.nl/research/mod/mod.html) \
