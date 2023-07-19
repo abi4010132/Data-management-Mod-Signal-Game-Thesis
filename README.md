@@ -45,8 +45,8 @@ After filling in the fields you can press start and follow the instructions to p
 The documents that were used in the experiment can be found in the Documents folder of the repository. \
 This folder contains:
 <ul>
-<li> 'Participant recruitment poster', the poster that I used to recruit the participants for the experiment. </li>
-<li> 'Informed_consent', the informed consent formed that is to be filled in by the participants before the start of the experiment. </li>
+<li> 'Participant recruitment poster.pdf', the poster that I used to recruit the participants for the experiment. </li>
+<li> 'Informed_consent.pdf', the informed consent formed that is to be filled in by the participants before the start of the experiment. </li>
 <li> 'Questionnaire Block 1.pdf', the questionnaire that the participants fill in after block 1. </li>
 <li> 'Questionnaire Block 2.pdf', the questionnaire that the participants fill in after block 2. </li>
 <li> 'Questionnaire Block 3.pdf', the questionnaire that the participants fill in after block 3. </li>
