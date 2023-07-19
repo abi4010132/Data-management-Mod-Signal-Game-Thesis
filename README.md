@@ -19,8 +19,8 @@ Then in the Player ID field, the id of the player needs to be entered for each g
 In the tables below you can find an example of how I ordered the games and player IDs.
 The first table contains which player ids the player should have in each block and the second table contains the game ids for each block, where X is the session number of the experiment.
 For example, the input for the Game and Player ID fields for player 2 in session 1 of the experiment would be: \
-Game: s1_g12,s1_g24,s1_g23 \
-Player ID: 1,0,0
+| Game | s1_g12,s1_g24,s1_g23 |
+| Player ID| 1,0,0 |
 |  | Block 1 | Block 2 | Block 3 |
 | --- | --- | --- | --- |
 | Player 1 | 0 | 1 | 0 |
