@@ -5,7 +5,7 @@ If you have any questions you can send an email to a.raveenthiran@student.rug.nl
 
 ## Experiment setup
 
-In my experiment a total of 21 participants played 3 blocks of the Mod-Signal Game, where each block lasted 20 rounds. After every block the participants were asked to fill in questionnaires regarding their strategy and their co-player's strategy. At the end of the experiment they were also asked to fill in a general questionnaire containing some general questions. The following subsections contain more information on how to replicate the experiment.
+In my experiment a total of 21 participants played 3 blocks of the Mod-Signal Game, where each block lasted 20 rounds. After every block the participants were asked to fill in questionnaires regarding their strategy and their co-player's strategy. At the end of the experiment they were also asked to fill in a general questionnaire containing some general questions. The text in the questionnaires and the instructions of the experiment were carefully designed to prevent any priming of cooperative or competitive behaviour. The following subsections contain more information on how to replicate the experiment.
 
 ### Experiment design choices
 
