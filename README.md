@@ -18,10 +18,6 @@ Here in the Game field, you can enter the ids of the 3 games to be played separa
 Then in the Player ID field, the id of the player needs to be entered for each game separated by a comma. Here the player ID can be either 0, 1 or 3. If the player ID is 1 this means that the player starts signalling in the first round and if the player ID is 0, the player receives the signal in the first round. Player ID 3 is used when you want to let the agent play, the agent always starts as the signaler in the first round. Make sure that only two players join the game and that one player has ID 0 and the other player has ID 1 if it is a human or 3 if it should be the agent. \
 In the tables below you can find an example of how I ordered the games and player IDs.
 The first table contains which player ids the player should have in each block and the second table contains the game ids for each block, where X is the session number of the experiment.
-For example, the input for the Game and Player ID fields for player 2 in session 1 of the experiment would be: \
-Game: s1_g12,s1_g24,s1_g23 \
-Player ID: 1,0,0 
-
 |  | Block 1 | Block 2 | Block 3 |
 | --- | --- | --- | --- |
 | Player 1 | 0 | 1 | 0 |
@@ -34,18 +30,25 @@ Player ID: 1,0,0
 | p1vp2: sX_g12 | p1vp3: sX_g13 | p2vp3: sX_g23 |
 | p3vagent: sX_g34 | p2vsagent: sX_g24 | p1vagent: sX_g14 |
 
-After filling in the fields you can press start and follow the instructions to play the game
+For example, the input for the Game and Player ID fields for player 2 in session 1 of the experiment would be: \
+Game: s1_g12,s1_g24,s1_g23 \
+Player ID: 1,0,0 
+
+After filling in the fields you can press start and follow the instructions to play the game.
 
 ### Documents
 
 The documents that were used in the experiment can be found in the Documents folder of the repository. \
-This folder contains: \
-'Participant recruitment poster', the poster that I used to recruit the participants for the experiment. \
-'Informed_consent', the informed consent formed that is to be filled in by the participants before the start of the experiment. \
-'Questionnaire Block 1.pdf', the questionnaire that the participants fill in after block 1. \
-'Questionnaire Block 2.pdf', the questionnaire that the participants fill in after block 2. \
-'Questionnaire Block 3.pdf', the questionnaire that the participants fill in after block 3. \
-'General Questionnaire.pdf', the questionnaire that the participants fill in after filling in 'Questionnaire Block 3'. \
+This folder contains:
+<ul>
+<li> 'Participant recruitment poster', the poster that I used to recruit the participants for the experiment. </li>
+<li> 'Informed_consent', the informed consent formed that is to be filled in by the participants before the start of the experiment. </li>
+<li> 'Questionnaire Block 1.pdf', the questionnaire that the participants fill in after block 1. </li>
+<li> 'Questionnaire Block 2.pdf', the questionnaire that the participants fill in after block 2. </li>
+<li> 'Questionnaire Block 3.pdf', the questionnaire that the participants fill in after block 3. </li>
+<li> 'General Questionnaire.pdf', the questionnaire that the participants fill in after filling in 'Questionnaire Block 3'. </li>
+</ul>
+
 
 ### Code
 
@@ -66,63 +69,71 @@ The data can be downloaded by going to [https://harmendeweerd.nl/research/mod/do
 
 #### Game data
 
-The game data obtained in my experiment can be found in the Data folder.
-game_data.php contains the raw data that was obtained from downloading the data. \
+The game data obtained in my experiment can be found in the 'Data' folder.
+the 'game_data.php' file contains the raw data that was obtained from downloading the data. \
 The data contains two entries per round of every game, one for the signaler and one for the responder.
-The data contains comma separated values of the following columns: \
-'game', the game ID. \
-'round', the round number. \
-'player', the playerID of the player. \
-'signal', number that was signalled in that round. \
-'action', number that the player chose that round. \
-'reactiontime', time it took for the player to choose a number to play in milliseconds. \
-\
+The data contains comma separated values of the following columns:
+<ul>
+<li> 'game', the game ID. </li>
+<li> 'round', the round number. </li>
+<li> 'player', the playerID of the player. </li>
+<li> 'signal', number that was signalled in that round. </li>
+<li> 'action', number that the player chose that round. </li>
+<li> 'reactiontime', time it took for the player to choose a number to play in milliseconds. </li>
+</ul>
 From the data alone it is not possible to tell who the signaler or responder is in that round, this has to be derived by looking at the round numbers and player IDs. If the round number is uneven then the player ID 1 or 3 is signalling, if the round number is even then player ID 0 is signalling.
 
 #### Questionnaire data
 
-The data for the questionnaires can be found in the Data folder as well as the 'Questionnaires' folder.
-The numerical values that could be extracted from the questionnaires have been compiled and sorted in the questionnaire_data.csv file.
-This file contains comma separated values of the following columns: \
-'Participant', this contains the participant ID in the format SXPY, where X is the number of the experiment session and Y is the player number given to the participant in that session. \
-'P-beauty', contains the values (ranging from 0-100) entered in the p-beauty contest question by the participants. \
-'B1 Coop', 'contains the cooperativeness ratings (ranging from 1-5) that the participants gave to their co-players of block 1. \
-'B1 Competitive', 'contains the competitiveness ratings (ranging from 1-5) that the participants gave to their co-players of block 1. \
-'B1 Competence', 'contains the competence ratings (ranging from 1-5) that the participants gave to their co-players of block 1. \
-'B1 Again?', contains discrete values of -1 (no), 0 (neutral), 1 (yes) that represent whether they wanted to play again with their co-players of block 1. \
-'B2 Coop', 'contains the cooperativeness ratings (ranging from 1-5) that the participants gave to their co-players of block 2. \
-'B2 Competitive', 'contains the competitiveness ratings (ranging from 1-5) that the participants gave to their co-players of block 2. \
-'B2 Competence', 'contains the competence ratings (ranging from 1-5) that the participants gave to their co-players of block 2. \
-'B2 Again?', contains discrete values of -1 (no), 0 (neutral), 1 (yes) that represent whether they wanted to play again with their co-players of block 2. \
-'B3 Coop', 'contains the cooperativeness ratings (ranging from 1-5) that the participants gave to their co-players of block 3. \
-'B3 Competitive', 'contains the competitiveness ratings (ranging from 1-5) that the participants gave to their co-players of block 3. \
-'B3 Competence', 'contains the competence ratings (ranging from 1-5) that the participants gave to their co-players of block 3. \
-'B3 Again?', contains discrete values of -1 (no), 0 (neutral), 1 (yes) that represent whether they wanted to play again with their co-players of block 3. \
-'B1 Human %', contains the percentage of how confident the participants were that they played with a human in block 1. \
-'B2 Human %', contains the percentage of how confident the participants were that they played with a human in block 2. \
-'B3 Human %', contains the percentage of how confident the participants were that they played with a human in block 3. \
-'age', contains the age of the participants. \
-'sex', contains the sex of the participants representend as M (male) and F (female). \
+The data for the questionnaires can be found in the 'Data' folder as well as the 'Questionnaires' folder.
+The numerical values that could be extracted from the questionnaires have been compiled and sorted in the 'questionnaire_data.csv' file.
+This file contains comma separated values of the following columns: 
+<ul>
+<li> 'Participant', this contains the participant ID in the format SXPY, where X is the number of the experiment session and Y is the player number given to the participant in that session. </li>
+<li> 'P-beauty', contains the values (ranging from 0-100) entered in the p-beauty contest question by the participants. </li>
+<li> 'B1 Coop', 'contains the cooperativeness ratings (ranging from 1-5) that the participants gave to their co-players of block 1. </li>
+<li> 'B1 Competitive', 'contains the competitiveness ratings (ranging from 1-5) that the participants gave to their co-players of block 1. </li>
+<li> 'B1 Competence', 'contains the competence ratings (ranging from 1-5) that the participants gave to their co-players of block 1. </li>
+<li> 'B1 Again?', contains discrete values of -1 (no), 0 (neutral), 1 (yes) that represent whether they wanted to play again with their co-players of block 1. </li>
+<li> 'B2 Coop', 'contains the cooperativeness ratings (ranging from 1-5) that the participants gave to their co-players of block 2. </li>
+<li> 'B2 Competitive', 'contains the competitiveness ratings (ranging from 1-5) that the participants gave to their co-players of block 2. </li>
+<li> 'B2 Competence', 'contains the competence ratings (ranging from 1-5) that the participants gave to their co-players of block 2. </li>
+<li> 'B2 Again?', contains discrete values of -1 (no), 0 (neutral), 1 (yes) that represent whether they wanted to play again with their co-players of block 2. </li>
+<li> 'B3 Coop', 'contains the cooperativeness ratings (ranging from 1-5) that the participants gave to their co-players of block 3. </li>
+<li> 'B3 Competitive', 'contains the competitiveness ratings (ranging from 1-5) that the participants gave to their co-players of block 3. </li>
+<li> 'B3 Competence', 'contains the competence ratings (ranging from 1-5) that the participants gave to their co-players of block 3. </li>
+<li> 'B3 Again?', contains discrete values of -1 (no), 0 (neutral), 1 (yes) that represent whether they wanted to play again with their co-players of block 3. </li>
+<li> 'B1 Human %', contains the percentage of how confident the participants were that they played with a human in block 1. </li>
+<li> 'B2 Human %', contains the percentage of how confident the participants were that they played with a human in block 2. </li>
+<li> 'B3 Human %', contains the percentage of how confident the participants were that they played with a human in block 3. </li>
+<li> 'age', contains the age of the participants. </li>
+<li> 'sex', contains the sex of the participants representend as M (male) and F (female). </li>
+</ul>
 
 The filled in questionnaire papers of each participant can be found in the 'Questionnaires' folder. \
-'Participants', this folder contains combined pdf files of the questionnaire data per participant. \
-'Block 1', this folder contains the filled in block 1 questionnaires of each participant. \
-'Block 2', this folder contains the filled in block 2 questionnaires of each participant. \
-'Block 3', this folder contains the filled in block 3 questionnaires of each participant. \
-'General', this folder contains the filled in general questionnaires of each participant. \
+This folder contains multiple folders:
+<ul>
+<li> 'Participants', this folder contains combined pdf files of the questionnaire data per participant. </li>
+<li> 'Block 1', this folder contains the filled in block 1 questionnaires of each participant. </li>
+<li> 'Block 2', this folder contains the filled in block 2 questionnaires of each participant. </li>
+<li> 'Block 3', this folder contains the filled in block 3 questionnaires of each participant. </li>
+<li> 'General', this folder contains the filled in general questionnaires of each participant. </li>
+</ul>
 
 The files are named based on the participant ID in the format SXPY, where X is the number of the experiment session and Y is the player number given to the participant in that session. To track these answers back to the game_data you would have to backtrack using the tables found in Game Data.
 
 ### Analysis
 
-The data analysis that was done in my thesis is found in the Data analysis folder. \
-The contains R markdown files which are run separately. \
-Make sure to run the first cells for data processing before running the other cells as the data processing differs per file depending on the analysis that is done within that file. \
-signalDifferences.rmd contains graphs related to the signal/choice/response distribution and the choice/response - signal differences. \
-honestyTrustRT.rmd contains graphs related to the honesty and trust levels of the participants as well as their reaction times. \
-scores.rmd contains graphs related to the scores that the participants achieved in the games. \
-questionnaire_analysis.rmd contains graphs regarding the questions that were asked in the questionnaires. \
-statistical_tests.rmd contains the statistical tests that were performed in the analysis. \
+The data analysis that was done in my thesis is found in the 'Data Analysis' folder. \
+The contains R markdown files which are run separately. Make sure to run the first cells for data processing before running the other cells as the data processing differs per file depending on the analysis that is done within that file. \
+The data analysis is separated in to the following files:
+<ul>
+<li> 'signalDifferences.rmd', contains graphs related to the signal/choice/response distribution and the choice/response - signal differences. </li>
+<li> 'honestyTrustRT.rmd', contains graphs related to the honesty and trust levels of the participants as well as their reaction times. </li>
+<li> 'scores.rmd', contains graphs related to the scores that the participants achieved in the games. </li>
+<li> 'questionnaire_analysis.rmd', contains graphs regarding the questions that were asked in the questionnaires. </li>
+<li> 'statistical_tests.rmd', contains the statistical tests that were performed in the analysis. </li>
+</ul>
 
-To run the code make sure that the 'game_data.php' and 'questionnaire_data.csv' files are in the same folder as the code, for convenience I've added the data of my experiment in the data analysis folder.
+To run the code make sure that the 'game_data.php' and 'questionnaire_data.csv' files are in the same folder as the code, for convenience I've added the data of my experiment in the 'Data Analysis' folder.
 
