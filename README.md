@@ -58,9 +58,9 @@ It is recommended to run the experiment in FireFox as other browsers prompt an u
 
 ### Downloading the data
 
-Everytime a number is played by a player data is appended to the online database. Therefore there will be 2 data entries per round of every game, one for the signaler and one for the responder. The data entries contain comma separated values of the game ID, round number, player ID, signalled number, chosen number and the reaction time for choosing the number. The data entries do not contain whether the player was signalling or not in that round, this has to be derived from the data itself. This is possible by looking at the round numbers and the player IDs, if the round numbere is uneven then player ID 1 or 3 is signalling, if the round number is even then player ID 0 is signalling. \
+Everytime a number is played by a player data is appended to the online database. Therefore there will be 2 data entries per round of every game, one for the signaler and one for the responder. The data entries contain comma separated values of the game ID, round number, player ID, signalled number, chosen number and the reaction time for choosing the number. The data entries do not contain whether the player was signalling or not in that round, this has to be derived from the data itself. This is possible by looking at the round numbers and the player IDs, if the round numbere is uneven then player ID 1 or 3 is signalling, if the round number is even then player ID 0 is signalling. 
 
-The data can be downloaded by going to [https://harmendeweerd.nl/research/mod/downloaddata.php](https://harmendeweerd.nl/research/mod/downloaddata.php) \
+The data can be downloaded by going to [https://harmendeweerd.nl/research/mod/downloaddata.php](https://harmendeweerd.nl/research/mod/downloaddata.php) 
 
 
 ## Data analysis
