@@ -1,6 +1,6 @@
 # Mod-Signal Game implementation
 
-This repository contains the data and code to replicate the experiment and results of the bachelor's thesis named 'Human behaviour analysis of human-human and human-agent interactions in the Mod-Signal Game' by A. Raveenthiran.
+This repository contains the data and code to replicate the experiment and results of the bachelor's thesis named 'Human behaviour analysis of human-human and human-agent interactions in the Mod-Signal Game' by Abi Raveenthiran.
 If you have any questions you can send an email to a.raveenthiran@student.rug.nl 
 
 ## Experiment setup
