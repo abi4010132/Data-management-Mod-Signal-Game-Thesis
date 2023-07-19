@@ -1,0 +1,538 @@
+---
+title: "reactonTime"
+author: "S4010132"
+date: '2023-06-03'
+output: html_document
+---
+TO DO:
+- compare rt after being deceived/playing cooperatively
+
+This file contains plots regarding honesty/trust levels and reaction time comparisons
+
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(magrittr)
+library(dplyr)
+library(ggplot2)
+library(stringr)
+```
+
+
+Data processing
+
+```{r}
+data <- read.csv('game_data.php')
+humanData <- data[order(data$game,data$round ),] %>% filter(player!=3) %>% mutate(signal = signal+1, action = action+1) %>% mutate(diff = case_when(
+  action-signal <= -2 ~ (action-signal+24),
+  action-signal >= -1 ~ (action-signal+0))) 
+
+humanData <- humanData %>% filter(!grepl("(s5_g23|s5_g24)", game))
+
+signals <- humanData %>% filter(round%%2 == player%%2) %>% mutate(honesty = case_when(diff == 0 ~ 1, diff != 0 ~ 0))
+responses <- humanData %>% filter(round%%2 != player%%2) %>% mutate(trust = case_when(diff == 1 ~ 1, diff != 1 ~ 0))
+honestSignals <- signals %>% filter(honesty == 1)
+disHonestSignals <- signals %>% filter(honesty == 0)
+trustingResponses <- responses %>% filter(trust == 1)
+disTrustingResponses <- responses %>% filter(trust == 0)
+
+block1 <- humanData %>% filter(grepl("(12|34)$", game))
+signalsBlock1 <- signals %>% filter(grepl("(12|34)$", game))
+responsesBlock1 <- responses %>% filter(grepl("(12|34)$", game))
+honestSignalsBlock1 <- honestSignals %>% filter(grepl("(12|34)$", game))
+disHonestSignalsBlock1 <- disHonestSignals %>% filter(grepl("(12|34)$", game))
+trustingResponsesBlock1 <- trustingResponses %>% filter(grepl("(12|34)$", game))
+disTrustingResponsesBlock1 <- disTrustingResponses %>% filter(grepl("(12|34)$", game))
+
+block2 <- humanData %>% filter(grepl("(24|13)$", game))
+signalsBlock2 <- signals %>% filter(grepl("(24|13)$", game))
+responsesBlock2 <- responses %>% filter(grepl("(24|13)$", game))
+honestSignalsBlock2 <- honestSignals %>% filter(grepl("(24|13)$", game))
+disHonestSignalsBlock2 <- disHonestSignals %>% filter(grepl("(24|13)$", game))
+trustingResponsesBlock2 <- trustingResponses %>% filter(grepl("(24|13)$", game))
+disTrustingResponsesBlock2 <- disTrustingResponses %>% filter(grepl("(24|13)$", game))
+
+block3 <- humanData %>% filter(grepl("(14|23)$", game))
+signalsBlock3 <- signals %>% filter(grepl("(14|23)$", game))
+responsesBlock3 <- responses %>% filter(grepl("(14|23)$", game))
+honestSignalsBlock3 <- honestSignals %>% filter(grepl("(14|23)$", game))
+disHonestSignalsBlock3 <- disHonestSignals %>% filter(grepl("(14|23)$", game))
+trustingResponsesBlock3 <- trustingResponses %>% filter(grepl("(14|23)$", game))
+disTrustingResponsesBlock3 <- disTrustingResponses %>% filter(grepl("(14|23)$", game))
+```
+
+Boxplots reaction time of playing honestly/dishonestly after signalling over all blocks and for each block
+```{r pressure, echo=FALSE}
+
+# all blocks
+boxplot(log(honestSignals$reactionTime), log(disHonestSignals$reactionTime),
+        main = "Logarithm of reaction times per participant after signalling 
+over all blocks",
+        at = c(1,2),
+        names = c("HRT", "DRT"),
+        las = 2,
+        col = c("grey","grey"),
+        border = "black",
+        horizontal = FALSE,
+        notch = FALSE,
+        ylab = "Log of reaction times (s)",
+        cex.lab = 1
+)
+# 
+# # block 1
+# boxplot(log(honestSignalsBlock1$reactionTime), log(disHonestSignalsBlock1$reactionTime),
+#         main = "Logarithm of reaction times per participant after signalling 
+# for block 1",
+#         at = c(1,2),
+#         names = c("HRT", "DRT"),
+#         las = 2,
+#         col = c("grey","grey"),
+#         border = "black",
+#         horizontal = FALSE,
+#         notch = FALSE,
+#         ylab = "Log of reaction times (s)",
+#         cex.lab = 1
+# )
+# 
+# #block 2
+# boxplot(log(honestSignalsBlock2$reactionTime), log(disHonestSignalsBlock2$reactionTime),
+#         main = "Logarithm of reaction times per participant after signalling 
+# for block 2",
+#         at = c(1,2),
+#         names = c("HRT", "DRT"),
+#         las = 2,
+#         col = c("grey","grey"),
+#         border = "black",
+#         horizontal = FALSE,
+#         notch = FALSE,
+#         ylab = "Log of reaction times (s)",
+#         cex.lab = 1
+# )
+# 
+# #block 3
+# boxplot(log(honestSignalsBlock3$reactionTime), log(disHonestSignalsBlock3$reactionTime),
+#         main = "Logarithm of reaction times per participant after signalling 
+# for block 3",
+#         at = c(1,2),
+#         names = c("HRT", "DRT"),
+#         las = 2,
+#         col = c("grey","grey"),
+#         border = "black",
+#         horizontal = FALSE,
+#         notch = FALSE,
+#         ylab = "Log of reaction times (s)",
+#         cex.lab = 1
+# )
+```
+
+Boxplots reaction time of playing trusting/distrusting after receiving a signal over all blocks and for each block
+```{r}
+# all blocks
+boxplot(log(trustingResponses$reactionTime), log(disTrustingResponses$reactionTime),
+        main = "Logarithm of reaction times per participant after receiving signal 
+over all blocks",
+        at = c(1,2),
+        names = c("TRT", "DRT"),
+        las = 2,
+        col = c("grey","grey"),
+        border = "black",
+        horizontal = FALSE,
+        notch = FALSE,
+        ylab = "Log of reaction times (s)",
+        cex.lab = 1
+)
+
+# # block 1
+# boxplot(log(trustingResponsesBlock1$reactionTime), log(disTrustingResponsesBlock1$reactionTime),
+#         main = "Logarithm of reaction times per participant after receiving signal 
+# for block 1",
+#         at = c(1,2),
+#         names = c("TRT", "DRT"),
+#         las = 2,
+#         col = c("grey","grey"),
+#         border = "black",
+#         horizontal = FALSE,
+#         notch = FALSE,
+#         ylab = "Log of reaction times (s)",
+#         cex.lab = 1
+# )
+
+# #block 2
+# boxplot(log(trustingResponsesBlock2$reactionTime), log(disTrustingResponsesBlock2$reactionTime),
+#         main = "Logarithm of reaction times per participant after receiving signal 
+# for block 2",
+#         at = c(1,2),
+#         names = c("TRT", "DRT"),
+#         las = 2,
+#         col = c("grey","grey"),
+#         border = "black",
+#         horizontal = FALSE,
+#         notch = FALSE,
+#         ylab = "Log of reaction times (s)",
+#         cex.lab = 1
+# )
+
+# #block 3
+# boxplot(log(trustingResponsesBlock3$reactionTime), log(disTrustingResponsesBlock3$reactionTime),
+#         main = "Logarithm of reaction times per participant after receiving signal 
+# for block 3",
+#         at = c(1,2),
+#         names = c("TRT", "DRT"),
+#         las = 2,
+#         col = c("grey","grey"),
+#         border = "black",
+#         horizontal = FALSE,
+#         notch = FALSE,
+#         ylab = "Log of reaction times (s)",
+#         cex.lab = 1
+# )
+```
+
+data split human human / human agent
+```{r}
+signalsHH <- signals %>% filter(!grepl("4$", game))
+signalsHA <- signals %>% filter(grepl("4$", game))
+
+signalsBlock1HH <- signalsBlock1 %>% filter(!grepl("4$", game))
+signalsBlock1HA <- signalsBlock1 %>% filter(grepl("4$", game))
+
+signalsBlock2HH <- signalsBlock2 %>% filter(!grepl("4$", game))
+signalsBlock2HA <- signalsBlock2 %>% filter(grepl("4$", game))
+
+signalsBlock3HH <- signalsBlock3 %>% filter(!grepl("4$", game))
+signalsBlock3HA <- signalsBlock3 %>% filter(grepl("4$", game))
+
+responsesHH <- responses %>% filter(!grepl("4$", game))
+responsesHA <- responses %>% filter(grepl("4$", game))
+
+responsesBlock1HH <- responsesBlock1 %>% filter(!grepl("4$", game))
+responsesBlock1HA <- responsesBlock1 %>% filter(grepl("4$", game))
+
+responsesBlock2HH <- responsesBlock2 %>% filter(!grepl("4$", game))
+responsesBlock2HA <- responsesBlock2 %>% filter(grepl("4$", game))
+
+responsesBlock3HH <- responsesBlock3 %>% filter(!grepl("4$", game))
+responsesBlock3HA <- responsesBlock3 %>% filter(grepl("4$", game))
+```
+
+Boxplots reaction time of playing: human vs human and human vs agent after signalling and after receiving signal all blocks
+```{r}
+# signaler human/agent reaction time all blocks
+boxplot(log(signalsHH$reactionTime), log(signalsHA$reactionTime),
+        main = "Logarithm of reaction times per participant 
+        after signalling",
+        at = c(1,2),
+        names = c("Human", "Agent"),
+        las = 2,
+        col = c("grey","grey"),
+        border = "black",
+        horizontal = FALSE,
+        notch = FALSE,
+        ylab = "Log of reaction times (s)",
+        cex.lab = 1
+)
+
+# responder human/agent reaction time all blocks
+boxplot(log(responsesHH$reactionTime), log(responsesHA$reactionTime),
+        main = "Logarithm of reaction times per participant 
+        after receiving signal",
+        at = c(1,2),
+        names = c("Human", "Agent"),
+        las = 2,
+        col = c("grey","grey"),
+        border = "black",
+        horizontal = FALSE,
+        notch = FALSE,
+        ylab = "Log of reaction times (s)",
+        cex.lab = 1
+)
+```
+data split human/agent conditions
+```{r}
+signalsListHH <- group_split(signalsHH, signalsHH$game)
+signalsListHA <- group_split(signalsHA, signalsHA$game)
+
+signalsListBlock1HH <- group_split(signalsBlock1HH, signalsBlock1HH$game)
+signalsListBlock1HA <- group_split(signalsBlock1HA, signalsBlock1HA$game)
+
+signalsListBlock2HH <- group_split(signalsBlock2HH, signalsBlock2HH$game)
+signalsListBlock2HA <- group_split(signalsBlock2HA, signalsBlock2HA$game)
+
+signalsListBlock3HH <- group_split(signalsBlock3HH, signalsBlock3HH$game)
+signalsListBlock3HA <- group_split(signalsBlock3HA, signalsBlock3HA$game)
+
+responsesListHH <- group_split(responsesHH, responsesHH$game)
+responsesListHA <- group_split(responsesHA, responsesHA$game)
+
+responsesListBlock1HH <- group_split(responsesBlock1HH, responsesBlock1HH$game)
+responsesListBlock1HA <- group_split(responsesBlock1HA, responsesBlock1HA$game)
+
+responsesListBlock2HH <- group_split(responsesBlock2HH, responsesBlock2HH$game)
+responsesListBlock2HA <- group_split(responsesBlock2HA, responsesBlock2HA$game)
+
+responsesListBlock3HH <- group_split(responsesBlock3HH, responsesBlock3HH$game)
+responsesListBlock3HA <- group_split(responsesBlock3HA, responsesBlock3HA$game)
+```
+
+honesty levels human/agent condition, for all blocks and each block
+```{r}
+
+honestyVector <- c()
+honestyGames <- c()
+
+honestyVectorHH <- c()
+honestyGamesHH <- c()
+honestyVectorBlock1HH <- c()
+honestyGamesBlock1HH <- c()
+honestyVectorBlock2HH <- c()
+honestyGamesBlock2HH <- c()
+honestyVectorBlock3HH <- c()
+honestyGamesBlock3HH <- c()
+
+for (game in signalsListHH){
+  honestySumHH = sum(game$honesty)/20*100
+  honestyVector <- c(honestyVector, honestySumHH)
+  honestyVectorHH <- c(honestyVectorHH, honestySumHH)
+  honestyGamesHH <- c(honestyGamesHH, head(game$game, 1))
+  honestyGames <- c(honestyGames, head(game$game, 1))
+  if(grepl("12$", head(game$game, 1))){
+      honestyVectorBlock1HH <- c(honestyVectorBlock1HH, honestySumHH)
+      honestyGamesBlock1HH <- c(honestyGamesBlock1HH, head(game$game, 1))
+  }else if(grepl("13$", head(game$game, 1))){
+      honestyVectorBlock2HH <- c(honestyVectorBlock2HH, honestySumHH)
+      honestyGamesBlock2HH <- c(honestyGamesBlock2HH, head(game$game, 1))
+  } else {
+      honestyVectorBlock3HH <- c(honestyVectorBlock3HH, honestySumHH)
+      honestyGamesBlock3HH <- c(honestyGamesBlock3HH, head(game$game, 1))
+  }
+}
+honestyFrameHH = data.frame(honestyVectorHH, honestyGamesHH)
+honestyFrameBlock1HH = data.frame(honestyVectorBlock1HH, honestyGamesBlock1HH)
+honestyFrameBlock2HH = data.frame(honestyVectorBlock2HH, honestyGamesBlock2HH)
+honestyFrameBlock3HH = data.frame(honestyVectorBlock3HH, honestyGamesBlock3HH)
+
+
+honestyVectorHA <- c()
+honestyGamesHA <- c()
+honestyVectorBlock1HA <- c()
+honestyGamesBlock1HA <- c()
+honestyVectorBlock2HA <- c()
+honestyGamesBlock2HA <- c()
+honestyVectorBlock3HA <- c()
+honestyGamesBlock3HA <- c()
+
+for (game in signalsListHA){
+  honestySumHA = sum(game$honesty)/10*100
+  honestyVector <- c(honestyVector, honestySumHA)
+  honestyVectorHA <- c(honestyVectorHA, honestySumHA)
+  honestyGamesHA <- c(honestyGamesHA, head(game$game, 1))
+  honestyGames <- c(honestyGames, head(game$game, 1))
+  if(grepl("34$", head(game$game, 1))){
+      honestyVectorBlock1HA <- c(honestyVectorBlock1HA, honestySumHA)
+      honestyGamesBlock1HA <- c(honestyGamesBlock1HA, head(game$game, 1))
+  }else if(grepl("24$", head(game$game, 1))){
+      honestyVectorBlock2HA <- c(honestyVectorBlock2HA, honestySumHA)
+      honestyGamesBlock2HA <- c(honestyGamesBlock2HA, head(game$game, 1))
+  } else {
+      honestyVectorBlock3HA <- c(honestyVectorBlock3HA, honestySumHA)
+      honestyGamesBlock3HA <- c(honestyGamesBlock3HA, head(game$game, 1))
+  }
+}
+honestyFrameHA = data.frame(honestyVectorHA, honestyGamesHA)
+honestyFrameBlock1HA = data.frame(honestyVectorBlock1HA, honestyGamesBlock1HA)
+honestyFrameBlock2HA = data.frame(honestyVectorBlock2HA, honestyGamesBlock2HA)
+honestyFrameBlock3HA = data.frame(honestyVectorBlock3HA, honestyGamesBlock3HA)
+
+honestyFrame = data.frame(honestyVector, honestyGames)
+
+
+# all blocks
+boxplot(honestyFrameHH$honestyVectorHH, honestyFrameHA$honestyVectorHA,
+        main = "honesty levels human/agent all blocks",
+        at = c(1,2),
+        names = c("HH", "HA"),
+        las = 2,
+        col = c("grey", "grey", "grey", "grey", "grey"),
+        border = "black",
+        horizontal = FALSE,
+        notch = FALSE,
+        ylab = "honesty level (%)",
+        ylim = c(0, 100)
+)
+
+# # block 1
+# boxplot(honestyFrameBlock1HH$honestyVectorBlock1HH, honestyFrameBlock1HA$honestyVectorBlock1HA,
+#         main = "honesty levels human/agent block 1",
+#         at = c(1,2),
+#         names = c("HH", "HA"),
+#         las = 2,
+#         col = c("grey", "grey", "grey", "grey", "grey"),
+#         border = "black",
+#         horizontal = FALSE,
+#         notch = FALSE,
+#         ylab = "honesty levels (%)",
+#         ylim = c(0, 100)
+# )
+# 
+# # block 2
+# boxplot(honestyFrameBlock2HH$honestyVectorBlock2HH, honestyFrameBlock2HA$honestyVectorBlock2HA,
+#         main = "honesty levels human/agent block 2",
+#         at = c(1,2),
+#         names = c("HH", "HA"),
+#         las = 2,
+#         col = c("grey", "grey", "grey", "grey", "grey"),
+#         border = "black",
+#         horizontal = FALSE,
+#         notch = FALSE,
+#         ylab = "honesty levels (%)",
+#         ylim = c(0, 100)
+# )
+# 
+# # block 3
+# boxplot(honestyFrameBlock3HH$honestyVectorBlock3HH, honestyFrameBlock3HA$honestyVectorBlock3HA,
+#         main = "honesty levels human/agent block 3",
+#         at = c(1,2),
+#         names = c("HH", "HA"),
+#         las = 2,
+#         col = c("grey", "grey", "grey", "grey", "grey"),
+#         border = "black",
+#         horizontal = FALSE,
+#         notch = FALSE,
+#         ylab = "honesty levels (%)",
+#         ylim = c(0, 100)
+# )
+
+```
+
+trust levels human/agent condition, for all blocks and each block
+
+```{r}
+
+trustVector <- c()
+trustGames <- c()
+
+trustVectorHH <- c()
+trustGamesHH <- c()
+trustVectorBlock1HH <- c()
+trustGamesBlock1HH <- c()
+trustVectorBlock2HH <- c()
+trustGamesBlock2HH <- c()
+trustVectorBlock3HH <- c()
+trustGamesBlock3HH <- c()
+
+for (game in responsesListHH){
+  print(sum(game$trust))
+  trustSumHH = sum(game$trust)/20*100
+  trustVector <- c(trustVector, trustSumHH)
+  trustVectorHH <- c(trustVectorHH, trustSumHH)
+  trustGames <- c(trustGames, head(game$game, 1))
+  trustGamesHH <- c(trustGamesHH, head(game$game, 1))
+  if(grepl("12$", head(game$game, 1))){
+      trustVectorBlock1HH <- c(trustVectorBlock1HH, trustSumHH)
+      trustGamesBlock1HH <- c(trustGamesBlock1HH, head(game$game, 1))
+  }else if(grepl("13$", head(game$game, 1))){
+      trustVectorBlock2HH <- c(trustVectorBlock2HH, trustSumHH)
+      trustGamesBlock2HH <- c(trustGamesBlock2HH, head(game$game, 1))
+  } else {
+      trustVectorBlock3HH <- c(trustVectorBlock3HH, trustSumHH)
+      trustGamesBlock3HH <- c(trustGamesBlock3HH, head(game$game, 1))
+  }
+}
+trustFrameHH = data.frame(trustVectorHH, trustGamesHH)
+trustFrameBlock1HH = data.frame(trustVectorBlock1HH, trustGamesBlock1HH)
+trustFrameBlock2HH = data.frame(trustVectorBlock2HH, trustGamesBlock2HH)
+trustFrameBlock3HH = data.frame(trustVectorBlock3HH, trustGamesBlock3HH)
+
+
+trustVectorHA <- c()
+trustGamesHA <- c()
+trustVectorBlock1HA <- c()
+trustGamesBlock1HA <- c()
+trustVectorBlock2HA <- c()
+trustGamesBlock2HA <- c()
+trustVectorBlock3HA <- c()
+trustGamesBlock3HA <- c()
+
+for (game in responsesListHA){
+  trustSumHA = sum(game$trust)/10*100
+  trustVector <- c(trustVector, trustSumHA)
+  trustVectorHA <- c(trustVectorHA, trustSumHA)
+  trustGames <- c(trustGames, head(game$game, 1))
+  trustGamesHA <- c(trustGamesHA, head(game$game, 1))
+  if(grepl("34$", head(game$game, 1))){
+      trustVectorBlock1HA <- c(trustVectorBlock1HA, trustSumHA)
+      trustGamesBlock1HA <- c(trustGamesBlock1HA, head(game$game, 1))
+  }else if(grepl("24$", head(game$game, 1))){
+      trustVectorBlock2HA <- c(trustVectorBlock2HA, trustSumHA)
+      trustGamesBlock2HA <- c(trustGamesBlock2HA, head(game$game, 1))
+  } else {
+      trustVectorBlock3HA <- c(trustVectorBlock3HA, trustSumHA)
+      trustGamesBlock3HA <- c(trustGamesBlock3HA, head(game$game, 1))
+  }
+}
+trustFrameHA = data.frame(trustVectorHA, trustGamesHA)
+trustFrameBlock1HA = data.frame(trustVectorBlock1HA, trustGamesBlock1HA)
+trustFrameBlock2HA = data.frame(trustVectorBlock2HA, trustGamesBlock2HA)
+trustFrameBlock3HA = data.frame(trustVectorBlock3HA, trustGamesBlock3HA)
+
+trustFrame = data.frame(trustVector, trustGames)
+
+
+# all blocks
+boxplot(trustFrameHH$trustVectorHH, trustFrameHA$trustVectorHA,
+        main = "trust levels human/agent all blocks",
+        at = c(1,2),
+        names = c("HH", "HA"),
+        las = 2,
+        col = c("grey", "grey", "grey", "grey", "grey"),
+        border = "black",
+        horizontal = FALSE,
+        notch = FALSE,
+        ylab = "trust levels (%)",
+        ylim = c(0, 100)
+)
+
+# # block 1
+# boxplot(trustFrameBlock1HH$trustVectorBlock1HH, trustFrameBlock1HA$trustVectorBlock1HA,
+#         main = "trust levels human/agent block 1",
+#         at = c(1,2),
+#         names = c("HH", "HA"),
+#         las = 2,
+#         col = c("grey", "grey", "grey", "grey", "grey"),
+#         border = "black",
+#         horizontal = FALSE,
+#         notch = FALSE,
+#         ylab = "trust levels (%)",
+#         ylim = c(0, 100)
+# )
+# 
+# # block 2
+# boxplot(trustFrameBlock2HH$trustVectorBlock2HH, trustFrameBlock2HA$trustVectorBlock2HA,
+#         main = "trust levels human/agent block 2",
+#         at = c(1,2),
+#         names = c("HH", "HA"),
+#         las = 2,
+#         col = c("grey", "grey", "grey", "grey", "grey"),
+#         border = "black",
+#         horizontal = FALSE,
+#         notch = FALSE,
+#         ylab = "trust levels (%)",
+#         ylim = c(0, 100)
+# )
+# 
+# # block 3
+# boxplot(trustFrameBlock3HH$trustVectorBlock3HH, trustFrameBlock3HA$trustVectorBlock3HA,
+#         main = "trust levels human/agent block 3",
+#         at = c(1,2),
+#         names = c("HH", "HA"),
+#         las = 2,
+#         col = c("grey", "grey", "grey", "grey", "grey"),
+#         border = "black",
+#         horizontal = FALSE,
+#         notch = FALSE,
+#         ylab = "trust levels (%)",
+#         ylim = c(0, 100)
+# )
+
+```
+

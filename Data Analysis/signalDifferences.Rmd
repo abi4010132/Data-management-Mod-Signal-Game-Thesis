@@ -1,0 +1,370 @@
+---
+title: "data analysis"
+author: "S4010132"
+date: '2023-05-26'
+output: html_document
+---
+TO DO:
+- user scores plot
+- find strategies/patterns
+
+This file contains plots showing the signal distribution and differences between response/choice - signal
+
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(magrittr)
+library(dplyr)
+library(ggplot2)
+library(stringr)
+```
+
+## R Markdown
+
+This is an R Markdown document. Markdown is a simple formatting syntax for authoring HTML, PDF, and MS Word documents. For more details on using R Markdown see <http://rmarkdown.rstudio.com>.
+
+When you click the **Knit** button a document will be generated that includes both content as well as the output of any embedded R code chunks within the document. You can embed an R code chunk like this:
+
+```{r}
+data <- read.csv('game_data.php')
+humanData <- data[order(data$game,data$round ),] %>% filter(player!=3) %>% mutate(signal = signal+1, action = action+1) %>% mutate(diff = case_when(
+  action-signal <= -2 ~ (action-signal+24),
+  action-signal >=-1 ~ (action-signal+0))) 
+
+humanData <- humanData %>% filter(!grepl("(s5_g23|s5_g24)", game))
+
+signals <- humanData %>% filter(round%%2 == player%%2) %>% mutate(honesty = case_when(diff == 0 ~ 1, diff != 0 ~ 0))
+responses <- humanData %>% filter(round%%2 != player%%2) %>% mutate(trust = case_when(diff == 1 ~ 1, diff != 1 ~ 0))
+
+block1 <- humanData %>% filter(grepl("(12|34)$", game))
+signalsBlock1 <- signals %>% filter(grepl("(12|34)$", game))
+responsesBlock1 <- responses %>% filter(grepl("(12|34)$", game))
+
+block2 <- humanData %>% filter(grepl("(24|13)$", game))
+signalsBlock2 <- signals %>% filter(grepl("(24|13)$", game))
+responsesBlock2 <- responses %>% filter(grepl("(24|13)$", game))
+
+block3 <- humanData %>% filter(grepl("(14|23)$", game))
+signalsBlock3 <- signals %>% filter(grepl("(14|23)$", game))
+responsesBlock3 <- responses %>% filter(grepl("(14|23)$", game))
+```
+
+Histogram of human signals all blocks and for each block
+```{r}
+# all blocks
+ggplot(data=data.frame(signals$signal), aes(x=signals$signal)) + 
+  geom_histogram(binwidth=1, color="#e9ecef", fill = "grey") +
+  stat_bin(binwidth=1, geom='text', color='black', size=4,
+           aes(label=..count..)) +
+  xlab("Signals") + ylab("Frequency") +
+  ggtitle("Human signals all blocks") + ylim(0, 150)
+
+# # block 1
+# ggplot(data=data.frame(signalsBlock1$signal), aes(x=signalsBlock1$signal)) + 
+#   geom_histogram(binwidth=1, color="#e9ecef", fill = "grey") +
+#   stat_bin(binwidth=1, geom='text', color='black', size=4,
+#            aes(label=..count..)) +
+#   xlab("User choices") + ylab("Frequency") +
+#   ggtitle("Histogram of human signals block 1") + ylim(0, 50)
+# 
+# # block 2
+# ggplot(data=data.frame(signalsBlock2$signal), aes(x=signalsBlock2$signal)) + 
+#   geom_histogram(binwidth=1, color="#e9ecef", fill = "grey") +
+#   stat_bin(binwidth=1, geom='text', color='black', size=4,
+#            aes(label=..count..)) +
+#   xlab("User choices") + ylab("Frequency") +
+#   ggtitle("Histogram of human signals block 2") + ylim(0, 50)
+# 
+# # block 3
+# ggplot(data=data.frame(signalsBlock3$signal), aes(x=signalsBlock3$signal)) + 
+#   geom_histogram(binwidth=1, color="#e9ecef", fill = "grey") +
+#   stat_bin(binwidth=1, geom='text', color='black', size=4,
+#            aes(label=..count..)) +
+#   xlab("User choices") + ylab("Frequency") +
+#   ggtitle("Histogram of human signals block 3") + ylim(0, 50)
+
+
+```
+
+Histogram of human signals all blocks and for each block
+```{r}
+# all blocks
+ggplot(data=data.frame(signals$action), aes(x=signals$action)) + 
+  geom_histogram(binwidth=1, color="#e9ecef", fill = "grey") +
+  stat_bin(binwidth=1, geom='text', color='black', size=4,
+           aes(label=after_stat(count))) +
+  xlab("User choices") + ylab("Frequency") +
+  ggtitle("Human choices all blocks") + ylim(0, 150)
+
+# all blocks
+ggplot(data=data.frame(responses$action), aes(x=responses$action)) + 
+  geom_histogram(binwidth=1, color="#e9ecef", fill = "grey") +
+  stat_bin(binwidth=1, geom='text', color='black', size=4,
+           aes(label=..count..)) +
+  xlab("User choices") + ylab("Frequency") +
+  ggtitle("Human responses all blocks") + ylim(0, 150)
+
+# # block 1
+# ggplot(data=data.frame(signalsBlock1$signal), aes(x=signalsBlock1$signal)) + 
+#   geom_histogram(binwidth=1, color="#e9ecef", fill = "grey") +
+#   stat_bin(binwidth=1, geom='text', color='black', size=4,
+#            aes(label=..count..)) +
+#   xlab("User choices") + ylab("Frequency") +
+#   ggtitle("Histogram of human signals block 1") + ylim(0, 50)
+# 
+# # block 2
+# ggplot(data=data.frame(signalsBlock2$signal), aes(x=signalsBlock2$signal)) + 
+#   geom_histogram(binwidth=1, color="#e9ecef", fill = "grey") +
+#   stat_bin(binwidth=1, geom='text', color='black', size=4,
+#            aes(label=..count..)) +
+#   xlab("User choices") + ylab("Frequency") +
+#   ggtitle("Histogram of human signals block 2") + ylim(0, 50)
+# 
+# # block 3
+# ggplot(data=data.frame(signalsBlock3$signal), aes(x=signalsBlock3$signal)) + 
+#   geom_histogram(binwidth=1, color="#e9ecef", fill = "grey") +
+#   stat_bin(binwidth=1, geom='text', color='black', size=4,
+#            aes(label=..count..)) +
+#   xlab("User choices") + ylab("Frequency") +
+#   ggtitle("Histogram of human signals block 3") + ylim(0, 50)
+
+
+```
+Histograms of the differences between signal and choice of the players signalling for all blocks and each block
+
+```{r}
+# all blocks
+ggplot(data=data.frame(signals$diff), aes(x=signals$diff)) + 
+  geom_histogram(binwidth=1, color="#e9ecef", fill = "grey") +
+  stat_bin(binwidth=1, geom='text', color='black', size=3.5,
+           aes(label=..count..)) +
+  xlab("Choice - Signal Difference") + ylab("Frequency") + ylim(0, 200) +
+  ggtitle("Human Choice - Signal Difference all blocks")
+
+# # block 1
+# ggplot(data=data.frame(signalsBlock1$diff), aes(x=signalsBlock1$diff)) + 
+#   geom_histogram(binwidth=1, color="#e9ecef", fill = "grey") +
+#   stat_bin(binwidth=1, geom='text', color='black', size=3.5,
+#            aes(label=..count..)) +
+#   xlab("Choice - Signal Difference") + ylab("Frequency") + ylim(0, 75) +
+#   ggtitle("Human Choice - Signal Difference block 1")
+# 
+# # block 2
+# ggplot(data=data.frame(signalsBlock2$diff), aes(x=signalsBlock2$diff)) + 
+#   geom_histogram(binwidth=1, color="#e9ecef", fill = "grey") +
+#   stat_bin(binwidth=1, geom='text', color='black', size=3.5,
+#            aes(label=..count..)) +
+#   xlab("Choice - Signal Difference") + ylab("Frequency") + ylim(0, 75) +
+#   ggtitle("Human Choice - Signal Difference block 2")
+# 
+# 
+# #block 3
+# ggplot(data=data.frame(signalsBlock3$diff), aes(x=signalsBlock3$diff)) + 
+#   geom_histogram(binwidth=1, color="#e9ecef", fill = "grey") +
+#   stat_bin(binwidth=1, geom='text', color='black', size=3.5,
+#            aes(label=..count..)) +
+#   xlab("Choice - Signal Difference") + ylab("Frequency") + ylim(0, 75) +
+#   ggtitle("Human Choice - Signal Difference block 3")
+
+
+```
+Histograms of the differences between signal and response of the players receiving the signal for all blocks and each block
+
+```{r}
+# all blocks
+ggplot(data=data.frame(responses$diff), aes(x=responses$diff)) + 
+  geom_histogram(binwidth=1, color="#e9ecef", fill = "grey") +
+  stat_bin(binwidth=1, geom='text', color='black', size=3.5,
+           aes(label=..count..)) +
+  xlab("Response - Signal Difference") + ylab("Frequency") + ylim(0, 200) +
+  ggtitle("Human Response - Signal Difference all blocks")
+
+# block 1
+# ggplot(data=data.frame(responsesBlock1$diff), aes(x=responsesBlock1$diff)) + 
+#   geom_histogram(binwidth=1, color="#e9ecef", fill = "grey") +
+#   stat_bin(binwidth=1, geom='text', color='black', size=3.5,
+#            aes(label=..count..)) +
+#   xlab("Response - Signal Difference") + ylab("Frequency") + ylim(0, 75) +
+#   ggtitle("Human Response - Signal Difference block 1")
+# 
+# # block 2
+# ggplot(data=data.frame(responsesBlock2$diff), aes(x=responsesBlock2$diff)) + 
+#   geom_histogram(binwidth=1, color="#e9ecef", fill = "grey") +
+#   stat_bin(binwidth=1, geom='text', color='black', size=3.5,
+#            aes(label=..count..)) +
+#   xlab("Response - Signal Difference") + ylab("Frequency") + ylim(0, 75) +
+#   ggtitle("Human Response - Signal Difference block 2")
+# 
+# 
+# #block 3
+# ggplot(data=data.frame(responsesBlock3$diff), aes(x=responsesBlock3$diff)) + 
+#   geom_histogram(binwidth=1, color="#e9ecef", fill = "grey") +
+#   stat_bin(binwidth=1, geom='text', color='black', size=3.5,
+#            aes(label=..count..)) +
+#   xlab("Response - Signal Difference") + ylab("Frequency") + ylim(0, 75) +
+#   ggtitle("Human Response - Signal Difference block 3")
+
+
+```
+human human / human agent data split
+```{r}
+signalsHH <- signals %>% filter(!grepl("4$", game))
+signalsHA <- signals %>% filter(grepl("4$", game))
+
+signalsBlock1HH <- signalsBlock1 %>% filter(!grepl("4$", game))
+signalsBlock1HA <- signalsBlock1 %>% filter(grepl("4$", game))
+
+signalsBlock2HH <- signalsBlock2 %>% filter(!grepl("4$", game))
+signalsBlock2HA <- signalsBlock2 %>% filter(grepl("4$", game))
+
+signalsBlock3HH <- signalsBlock3 %>% filter(!grepl("4$", game))
+signalsBlock3HA <- signalsBlock3 %>% filter(grepl("4$", game))
+
+responsesHH <- responses %>% filter(!grepl("4$", game))
+responsesHA <- responses %>% filter(grepl("4$", game))
+
+responsesBlock1HH <- responsesBlock1 %>% filter(!grepl("4$", game))
+responsesBlock1HA <- responsesBlock1 %>% filter(grepl("4$", game))
+
+responsesBlock2HH <- responsesBlock2 %>% filter(!grepl("4$", game))
+responsesBlock2HA <- responsesBlock2 %>% filter(grepl("4$", game))
+
+responsesBlock3HH <- responsesBlock3 %>% filter(!grepl("4$", game))
+responsesBlock3HA <- responsesBlock3 %>% filter(grepl("4$", game))
+```
+
+Human - Human condition: Choice - Signal difference for all blocks and each block
+```{r}
+# all blocks
+# png(filename="img/choice_signal_HH.png", width=1000, height=400)
+
+ggplot(data=data.frame(signalsHH$diff), aes(x=signalsHH$diff)) + 
+  geom_histogram(aes(y = ..density..),binwidth=1, color="#e9ecef", fill = "grey") +
+  xlab("Response - Signal") + ylab("Density") + ylim(0, 0.3) +
+  stat_bin(binwidth=1,geom="text",aes(label= round(..density..,2), y=..density..), colour="black") +
+  ggtitle("Choice - Signal Difference all blocks HH")
+
+# dev.off()
+
+# block 1
+# ggplot(data=data.frame(signalsBlock1HH$diff), aes(x=signalsBlock1HH$diff)) + 
+#   geom_histogram(aes(y = ..density..),binwidth=1, color="#e9ecef", fill = "grey") +
+#   xlab("Response - Signal") + ylab("Density") + ylim(0, 0.5) +
+#   ggtitle("Choice - Signal Difference block 1 HH")
+# 
+# # block 2
+# ggplot(data=data.frame(signalsBlock2HH$diff), aes(x=signalsBlock2HH$diff)) + 
+#   geom_histogram(aes(y = ..density..),binwidth=1, color="#e9ecef", fill = "grey") +
+#   xlab("Response - Signal") + ylab("Density") + ylim(0, 0.5) +
+#   ggtitle("Choice - Signal Difference block 2 HH")
+# 
+# # block 3
+# ggplot(data=data.frame(signalsBlock3HH$diff), aes(x=signalsBlock3HH$diff)) + 
+#   geom_histogram(aes(y = ..density..),binwidth=1, color="#e9ecef", fill = "grey") +
+#   xlab("Response - Signal") + ylab("Density") + ylim(0, 0.5) +
+#   ggtitle("Choice - Signal Difference block 3 HH")
+
+```
+Human - Human condition: Response - Signal difference for all blocks and each block
+```{r}
+# all blocks
+# png(filename="img/response_signal_HH.png", width=1000, height=400)
+
+ggplot(data=data.frame(responsesHH$diff), aes(x=responsesHH$diff)) + 
+  geom_histogram(aes(y = ..density..),binwidth=1, color="#e9ecef", fill = "grey") +
+  xlab("Response - Signal") + ylab("Density") + ylim(0, 0.3) +
+  stat_bin(binwidth=1,geom="text",aes(label= round(..density..,2), y=..density..), colour="black") +
+  ggtitle("Response - Signal Difference all blocks HH")
+
+# dev.off()
+
+# # block 1
+# ggplot(data=data.frame(responsesBlock1HH$diff), aes(x=responsesBlock1HH$diff)) + 
+#   geom_histogram(aes(y = ..density..),binwidth=1, color="#e9ecef", fill = "grey") +
+#   xlab("Response - Signal") + ylab("Density") + ylim(0, 0.5) +
+#   ggtitle("Response - Signal Difference block 1 HH")
+# 
+# # block 2
+# ggplot(data=data.frame(responsesBlock2HH$diff), aes(x=responsesBlock2HH$diff)) + 
+#   geom_histogram(aes(y = ..density..),binwidth=1, color="#e9ecef", fill = "grey") +
+#   xlab("Response - Signal") + ylab("Density") + ylim(0, 0.5) +
+#   ggtitle("Response - Signal Difference block 2 HH")
+# 
+# # block 3
+# ggplot(data=data.frame(responsesBlock3HH$diff), aes(x=responsesBlock3HH$diff)) + 
+#   geom_histogram(aes(y = ..density..),binwidth=1, color="#e9ecef", fill = "grey") +
+#   xlab("Response - Signal") + ylab("Density") + ylim(0, 0.5) +
+#   ggtitle("Response - Signal Difference block 3 HH")
+
+```
+Human - Agent condition: Choice - Signal difference for all blocks and each block
+```{r}
+# all blocks
+# png(filename="img/choice_signal_HA.png", width=1000, height=400)
+
+ggplot(data=data.frame(signalsHA$diff), aes(x=signalsHA$diff)) + 
+  geom_histogram(aes(y = ..density..),binwidth=1, color="#e9ecef", fill = "grey") +
+  xlab("Response - Signal") + ylab("Density") + ylim(0, 0.3) +
+  stat_bin(binwidth=1,geom="text",aes(label= round(..density..,2), y=..density..), colour="black") +
+  ggtitle("Choice - Signal Difference all blocks HA")
+
+# dev.off()
+
+# # block 1
+# ggplot(data=data.frame(signalsBlock1HA$diff), aes(x=signalsBlock1HA$diff)) + 
+#   geom_histogram(aes(y = ..density..),binwidth=1, color="#e9ecef", fill = "grey") +
+#   xlab("Response - Signal") + ylab("Density") + ylim(0, 0.5) +
+#   ggtitle("Choice - Signal Difference block 1 HA")
+# 
+# # block 2
+# ggplot(data=data.frame(signalsBlock2HA$diff), aes(x=signalsBlock2HA$diff)) + 
+#   geom_histogram(aes(y = ..density..),binwidth=1, color="#e9ecef", fill = "grey") +
+#   xlab("Response - Signal") + ylab("Density") + ylim(0, 0.5) +
+#   ggtitle("Choice - Signal Difference block 2 HA")
+# 
+# # block 3
+# ggplot(data=data.frame(signalsBlock3HA$diff), aes(x=signalsBlock3HA$diff)) + 
+#   geom_histogram(aes(y = ..density..),binwidth=1, color="#e9ecef", fill = "grey") +
+#   xlab("Response - Signal") + ylab("Density") + ylim(0, 0.5) +
+#   ggtitle("Choice - Signal Difference block 3 HA")
+
+```
+Human - Agent condition: Response - Signal difference for all blocks and each block
+```{r}
+# all blocks
+# png(filename="img/response_signal_HA.png", width=1000, height=400)
+
+ggplot(data=data.frame(responsesHA$diff), aes(x=responsesHA$diff)) + 
+  geom_histogram(aes(y = ..density..),binwidth=1, color="#e9ecef", fill = "grey") +
+  xlab("Response - Signal") + ylab("Density") + ylim(0, 0.3) +
+  stat_bin(binwidth=1,geom="text",aes(label= round(..density..,2), y=..density..), colour="black") +
+  ggtitle("Response - Signal Difference all blocks HA")
+
+# dev.off()
+
+# # block 1
+# ggplot(data=data.frame(responsesBlock1HA$diff), aes(x=responsesBlock1HA$diff)) + 
+#   geom_histogram(aes(y = ..density..),binwidth=1, color="#e9ecef", fill = "grey") +
+#   xlab("Response - Signal") + ylab("Density") + ylim(0, 0.5) +
+#   stat_bin(binwidth=1,geom="text",aes(label=round(..density..,2), y=0.75*..density..), colour="black") +
+#   ggtitle("Response - Signal Difference block 1 HA")
+# 
+# # block 2
+# ggplot(data=data.frame(responsesBlock2HA$diff), aes(x=responsesBlock2HA$diff)) + 
+#   geom_histogram(aes(y = ..density..),binwidth=1, color="#e9ecef", fill = "grey") +
+#   xlab("Response - Signal") + ylab("Density") + ylim(0, 0.5) +
+#   stat_bin(binwidth=1,geom="text",aes(label=round(..density..,2), y=0.75*..density..), colour="black") +
+#   ggtitle("Response - Signal Difference block 2 HA")
+# 
+# # block 3
+# ggplot(data=data.frame(responsesBlock3HA$diff), aes(x=responsesBlock3HA$diff)) + 
+#   geom_histogram(aes(y = ..density..),binwidth=1, color="#e9ecef", fill = "grey") +
+#   xlab("Response - Signal") + ylab("Density") + ylim(0,0.5) +
+#   stat_bin(binwidth=1,geom="text",aes(label=round(..density..,2), y=0.75*..density..), colour="black") +
+#   ggtitle("Response - Signal Difference block 3 HA")
+
+
+```
+
+
+

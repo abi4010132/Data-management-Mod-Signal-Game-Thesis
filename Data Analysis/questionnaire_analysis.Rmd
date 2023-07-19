@@ -1,0 +1,94 @@
+---
+title: "questionnaires"
+author: "S4010132"
+date: '2023-06-26'
+output: html_document
+---
+
+```{r setup, include=FALSE}
+library(magrittr)
+library(dplyr)
+library(ggplot2)
+library(stringr)
+```
+
+
+ Data processing
+```{r}
+q_data <- read.csv('questionnaire_data.csv', na.strings= c("-"))
+data_p1 <- q_data %>% filter(grepl("1$", Participant))
+data_p2 <- q_data %>% filter(grepl("2$", Participant))
+data_p3 <- q_data %>% filter(grepl("3$", Participant))
+```
+
+```{r}
+confidenceHuman <- c(data_p1$B1.Human.., data_p1$B2.Human.., data_p2$B1.Human.., data_p2$B3.Human.., data_p3$B2.Human.., data_p3$B3.Human..)
+confidenceAgent <- c(data_p1$B3.Human.., data_p2$B2.Human.., data_p3$B1.Human..)
+```
+
+```{r pressure, echo=FALSE}
+
+humanB1 = data.frame(q_data$B1.Human.., seq(1:21))
+humanB2 = data.frame(q_data$B2.Human.., seq(1:21))
+humanB3 = data.frame(q_data$B3.Human.., seq(1:21))
+competenceB1 = data.frame(q_data$B1.Competent, seq(1:21))
+competenceB2 = data.frame(q_data$B2.Competent, seq(1:21))
+competenceB3 = data.frame(q_data$B3.Competent, seq(1:21))
+
+confidenceHumanFrame = data.frame(confidenceHuman, seq(1:42))
+confidenceAgentFrame = data.frame(confidenceAgent, seq(1:21))
+
+
+```
+
+human confidence per block
+
+```{r}
+boxplot(humanB1$q_data.B1.Human.., humanB2$q_data.B2.Human.., humanB3$q_data.B3.Human..,
+        main = "Confidence levels playing with human - per block",
+        at = c(1,2, 3),
+        names = c("Block 1", "Block 2", "Block 3"),
+        las = 2,
+        col = c("grey", "grey", "grey", "grey", "grey"),
+        border = "black",
+        horizontal = FALSE,
+        notch = FALSE,
+        ylab = "Confidence (%)",
+        ylim = c(0, 100)
+)
+```
+Competence per block
+```{r}
+
+boxplot(competenceB1$q_data.B1.Competent, competenceB2$q_data.B2.Competent, competenceB3$q_data.B3.Competent,
+        main = "Competence levels (1-5) per block",
+        at = c(1,2, 3),
+        names = c("Block 1", "Block 2", "Block 3"),
+        las = 2,
+        col = c("grey", "grey", "grey", "grey", "grey"),
+        border = "black",
+        horizontal = FALSE,
+        notch = FALSE,
+        ylab = "Competence",
+        ylim = c(1, 5)
+)
+
+```
+Human confidence levels human/agent
+```{r}
+boxplot(confidenceHumanFrame$confidenceHuman, confidenceAgentFrame$confidenceAgent,
+        main = "Confidence levels playing with human - human/agent",
+        at = c(1,2),
+        names = c("Human", "Agent"),
+        las = 2,
+        col = c("grey", "grey", "grey", "grey", "grey"),
+        border = "black",
+        horizontal = FALSE,
+        notch = FALSE,
+        ylab = "Confidence (%)",
+        ylim = c(0, 100)
+)
+
+```
+
+Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.

@@ -1,0 +1,150 @@
+---
+title: "statistical_tests"
+author: "S4010132"
+date: '2023-07-08'
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(magrittr)
+library(dplyr)
+library(ggplot2)
+library(stringr)
+```
+
+loading data
+```{r}
+data <- read.csv('game_data.php')
+
+humanData <- data[order(data$game,data$round ),] %>% filter(player!=3) %>% mutate(signal = signal+1, action = action+1) %>% mutate(diff = case_when(
+  action-signal <= -2 ~ (action-signal+24),
+  action-signal >=-1 ~ (action-signal+0))) 
+
+humanData <- humanData %>% filter(!grepl("(s5_g23|s5_g24)", game))
+
+humanData <- humanData %>% mutate(participant = case_when(
+  strtoi(substr(humanData$game,6,6)) == 4 & player == 1 ~ 0,
+  strtoi(substr(humanData$game,6,6)) == 4 & player == 0 ~ 
+    (strtoi(substr(humanData$game,2,2))-1)*3 + strtoi(substr(humanData$game,5,5)),
+  strtoi(substr(humanData$game,6,6)) - strtoi(substr(humanData$game,5,5)) == 1 & player == 1 ~ 
+    (strtoi(substr(humanData$game,2,2))-1)*3 + strtoi(substr(humanData$game,6,6)),
+  strtoi(substr(humanData$game,6,6)) - strtoi(substr(humanData$game,5,5)) == 1 & player == 0 ~ 
+    (strtoi(substr(humanData$game,2,2))-1)*3 + strtoi(substr(humanData$game,5,5)),
+  strtoi(substr(humanData$game,6,6)) - strtoi(substr(humanData$game,5,5)) == 2 & player == 1 ~ 
+    (strtoi(substr(humanData$game,2,2))-1)*3 + strtoi(substr(humanData$game,5,5)),
+  strtoi(substr(humanData$game,6,6)) - strtoi(substr(humanData$game,5,5)) == 2 & player == 0 ~ 
+    (strtoi(substr(humanData$game,2,2))-1)*3 + strtoi(substr(humanData$game,6,6)),
+))
+
+signals <- humanData %>% filter(round%%2 == player%%2) %>% mutate(honesty = case_when(diff == 0 ~ 1, diff != 0 ~ 0))
+responses <- humanData %>% filter(round%%2 != player%%2) %>% mutate(trust = case_when(diff == 1 ~ 1, diff != 1 ~ 0))
+honestSignals <- signals %>% filter(honesty == 1)
+disHonestSignals <- signals %>% filter(honesty == 0)
+trustingResponses <- responses %>% filter(trust == 1)
+disTrustingResponses <- responses %>% filter(trust == 0)
+
+signalsHH <- signals %>% filter(!grepl("4$", game))
+signalsHA <- signals %>% filter(grepl("4$", game))
+responsesHH <- responses %>% filter(!grepl("4$", game))
+responsesHA <- responses %>% filter(grepl("4$", game))
+
+block1 <- humanData %>% filter(grepl("(12|34)$", game))
+signalsBlock1 <- signals %>% filter(grepl("(12|34)$", game))
+responsesBlock1 <- responses %>% filter(grepl("(12|34)$", game))
+honestSignalsBlock1 <- honestSignals %>% filter(grepl("(12|34)$", game))
+disHonestSignalsBlock1 <- disHonestSignals %>% filter(grepl("(12|34)$", game))
+trustingResponsesBlock1 <- trustingResponses %>% filter(grepl("(12|34)$", game))
+disTrustingResponsesBlock1 <- disTrustingResponses %>% filter(grepl("(12|34)$", game))
+
+block2 <- humanData %>% filter(grepl("(24|13)$", game))
+signalsBlock2 <- signals %>% filter(grepl("(24|13)$", game))
+responsesBlock2 <- responses %>% filter(grepl("(24|13)$", game))
+honestSignalsBlock2 <- honestSignals %>% filter(grepl("(24|13)$", game))
+disHonestSignalsBlock2 <- disHonestSignals %>% filter(grepl("(24|13)$", game))
+trustingResponsesBlock2 <- trustingResponses %>% filter(grepl("(24|13)$", game))
+disTrustingResponsesBlock2 <- disTrustingResponses %>% filter(grepl("(24|13)$", game))
+
+block3 <- humanData %>% filter(grepl("(14|23)$", game))
+signalsBlock3 <- signals %>% filter(grepl("(14|23)$", game))
+responsesBlock3 <- responses %>% filter(grepl("(14|23)$", game))
+honestSignalsBlock3 <- honestSignals %>% filter(grepl("(14|23)$", game))
+disHonestSignalsBlock3 <- disHonestSignals %>% filter(grepl("(14|23)$", game))
+trustingResponsesBlock3 <- trustingResponses %>% filter(grepl("(14|23)$", game))
+disTrustingResponsesBlock3 <- disTrustingResponses %>% filter(grepl("(14|23)$", game))
+
+```
+
+loading questionnaire data
+```{r}
+q_data <- read.csv('questionnaire_data.csv', na.strings= c("-"))
+data_p1 <- q_data %>% filter(grepl("1$", Participant))
+data_p2 <- q_data %>% filter(grepl("2$", Participant))
+data_p3 <- q_data %>% filter(grepl("3$", Participant))
+confidenceHuman <- c(data_p1$B1.Human.., data_p1$B2.Human.., data_p2$B1.Human.., data_p2$B3.Human.., data_p3$B2.Human.., data_p3$B3.Human..)
+confidenceAgent <- c(data_p1$B3.Human.., data_p2$B2.Human.., data_p3$B1.Human..)
+```
+
+honesty/trust reaction times
+
+```{r}
+meansHonestRT = c()
+meansDishonestRT = c()
+meansTrustingRT = c()
+meansDistrustingRT = c()
+
+for(i in 1:21){
+  meansHonestRT = c(meansHonestRT, (mean(log(honestSignals$reactionTime[honestSignals$participant == i]))))
+  meansDishonestRT = c(meansDishonestRT, (mean(log(disHonestSignals$reactionTime[disHonestSignals$participant == i]))))
+  meansTrustingRT = c(meansTrustingRT, (mean(log(trustingResponses$reactionTime[trustingResponses$participant == i]))))
+  meansDistrustingRT = c(meansDistrustingRT, (mean(log(disTrustingResponses$reactionTime[disTrustingResponses$participant == i]))))
+}
+
+t.test(meansDishonestRT, meansHonestRT, paired = TRUE, alternative = "two.sided", na.rm=TRUE)
+t.test(meansDistrustingRT, meansTrustingRT, paired = TRUE, alternative = "two.sided", na.rm=TRUE)
+
+
+```
+honesty/trust levels 
+```{r}
+
+prop.test(x = c(sum(signalsHH$honesty), sum(signalsHA$honesty)), n = c(length(signalsHH$honesty), length(signalsHA$honesty)))
+prop.test(x = c(sum(responsesHH$trust), sum(responsesHA$trust)), n = c(length(responsesHH$trust), length(responsesHA$trust)))
+
+```
+confidence human/agent
+```{r}
+confidenceHumanVector = c()
+confidenceAgentVector = c()
+
+for(i in 1:21) {
+  if(grepl("1$", q_data$Participant[i])){
+    confidenceHumanVector = c(confidenceHumanVector, mean(c(q_data$B1.Human..[i], q_data$B2.Human..[i])))
+    confidenceAgentVector = c(confidenceAgentVector, q_data$B3.Human..[i])
+  } else if(grepl("2$", q_data$Participant[i])) {
+    confidenceHumanVector = c(confidenceHumanVector, mean(c(q_data$B1.Human..[i], q_data$B3.Human..[i])))
+    confidenceAgentVector = c(confidenceAgentVector, q_data$B2.Human..[i])
+  } else if(grepl("3$", q_data$Participant[i])) {
+    confidenceHumanVector = c(confidenceHumanVector, mean(c(q_data$B2.Human..[i], q_data$B3.Human..[i])))
+    confidenceAgentVector = c(confidenceAgentVector, q_data$B1.Human..[i])
+  }
+}
+
+t.test(confidenceHumanVector, confidenceAgentVector, paired = TRUE, alternative = "two.sided", na.rm=TRUE)
+
+
+```
+
+confidence levels blocks
+```{r}
+confidence = c(q_data$B1.Human..,q_data$B2.Human.., q_data$B3.Human..)
+blocks = c(rep("B1", 21), rep("B2", 21), rep("B3", 21))
+anovaDF <- data.frame(confidence, blocks)
+res.aov <- aov(confidence ~ blocks, data= anovaDF)
+summary(res.aov)
+```
+scores human/agent
+```{r}
+prop.test(x = c(sum(scoresHA), sum(scoresHH)), n = c(length(scoresHA)*20, length(scoresHH)*20))
+
+```

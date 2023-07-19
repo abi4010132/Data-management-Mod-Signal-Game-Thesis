@@ -1,0 +1,342 @@
+---
+title: "scores"
+author: "S4010132"
+date: '2023-06-15'
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(magrittr)
+library(dplyr)
+library(ggplot2)
+library(stringr)
+```
+
+Data processing
+```{r}
+data <- read.csv('game_data.php')
+adjustedData <- data[order(data$game,data$round ),] %>% mutate(signal = signal+1, action = action+1) %>% mutate(diff = case_when(
+  action-signal <= -2 ~ (action-signal+24),
+  action-signal >=-1 ~ (action-signal+0))) 
+
+adjustedData <- adjustedData %>% filter(!grepl("(s5_g23|s5_g24)", game))
+
+signals <- adjustedData %>% filter(round%%2 == player%%2) %>% mutate(honesty = case_when(diff == 0 ~ 1, diff != 0 ~ 0))
+responses <- adjustedData %>% filter(round%%2 != player%%2) %>% mutate(trust = case_when(diff == 1 ~ 1, diff != 1 ~ 0))
+signals <- signals %>% rename(signaler = player, actionTime = reactionTime, actionDiff = diff)
+responses <- responses %>% rename(responder = player, response = action, responseDiff = diff)
+mergedData <- merge(signals, responses, by = c("game", "round", "signal"))
+mergedData <- mergedData[order(mergedData$game, mergedData$round),] %>% mutate(
+  player1Point = case_when(
+    action-response == 1 & round%%2 == 1 ~ 1, 
+    action-response == -23 & round%%2 == 1 ~ 1, 
+    action-response != (-23 && 1) & round%%2 == 1 ~ 0,
+    response-action == 1 & round%%2 == 0 ~ 1,
+    response-action == -23 & round%%2 == 0 ~ 1,
+    response-action != (-23 && 1) & round%%2 == 0 ~ 0),
+  player0Point = case_when(
+    action-response == 1 & round%%2 == 0 ~ 1, 
+    action-response == -23 & round%%2 == 0 ~ 1, 
+    action-response != (-23 && 1) & round%%2 == 0 ~ 0,
+    response-action == 1 & round%%2 == 1 ~ 1,
+    response-action == -23 & round%%2 == 1 ~ 1,
+    response-action != (-23 && 1) & round%%2 == 1 ~ 0),
+  signalerPoint = case_when(
+    action-response == 1 ~ 1, 
+    action-response == -23 ~ 1, 
+    action-response != (-23 && 1) ~ 0),
+  responderPoint = case_when(
+    response-action == 1 ~ 1,
+    response-action == -23 ~ 1,
+    response-action != (-23 && 1) ~ 0)
+  )
+
+block1 <- adjustedData %>% filter(grepl("(12|34)$", game))
+signalsBlock1 <- signals %>% filter(grepl("(12|34)$", game))
+responsesBlock1 <- responses %>% filter(grepl("(12|34)$", game))
+mergedBlock1 <- mergedData %>% filter(grepl("(12|34)$", game))
+
+block2 <- adjustedData %>% filter(grepl("(24|13)$", game))
+signalsBlock2 <- signals %>% filter(grepl("(24|13)$", game))
+responsesBlock2 <- responses %>% filter(grepl("(24|13)$", game))
+mergedBlock2 <- mergedData %>% filter(grepl("(24|13)$", game))
+
+
+block3 <- adjustedData %>% filter(grepl("(14|23)$", game))
+signalsBlock3 <- signals %>% filter(grepl("(14|23)$", game))
+responsesBlock3 <- responses %>% filter(grepl("(14|23)$", game))
+mergedBlock3 <- mergedData %>% filter(grepl("(14|23)$", game))
+
+participant1 <- mergedData %>% filter(grepl("(12|13|14)$", game))
+participant2 <- mergedData %>% filter(grepl("(12|23|24)$", game))
+participant3 <- mergedData %>% filter(grepl("(13|23|34)$", game))
+
+participant1Games <- group_split(participant1, participant1$game)
+participant2Games <- group_split(participant2, participant2$game)
+participant3Games <- group_split(participant3, participant3$game)
+
+
+mergedGamesB1 <- group_split(mergedBlock1, mergedBlock1$game)
+mergedGamesB2 <- group_split(mergedBlock2, mergedBlock2$game)
+mergedGamesB3 <- group_split(mergedBlock3, mergedBlock3$game)
+
+mergedGames <- group_split(mergedData, mergedData$game)
+
+mergedDataHH <- mergedData %>% filter(!grepl("4$", game))
+mergedDataHA <- mergedData %>% filter(grepl("4$", game))
+mergedGamesHH <- group_split(mergedDataHH, mergedDataHH$game)
+mergedGamesHA <- group_split(mergedDataHA, mergedDataHA$game)
+
+```
+
+Scores per block / starting order   
+```{r}
+
+
+scores = c()
+scoresGames = c()
+
+scoresVectorB1 = c()
+scoresVectorB2 = c()
+scoresVectorB3 = c()
+scoresGamesB1 = c()
+scoresGamesB2 = c()
+scoresGamesB3 = c()
+
+player1PointsVector = c()
+player1PointsVectorB1 = c()
+player1PointsVectorB2 = c()
+player1PointsVectorB3 = c()
+player1Games = c()
+player1GamesB1 = c()
+player1GamesB2 = c()
+player1GamesB3 = c()
+
+player0PointsVector = c()
+player0PointsVectorB1 = c()
+player0PointsVectorB2 = c()
+player0PointsVectorB3 = c()
+
+player0Games = c()
+player0GamesB1 = c()
+player0GamesB2 = c()
+player0GamesB3 = c()
+
+for (game in mergedGamesB1){
+  
+  player0Points = sum(game$player0Point)
+  player1Points = sum(game$player1Point)
+  
+  if(!grepl("4$", head(game$game, 1))){
+    player1PointsVector <- c(player1PointsVector, player1Points)
+    player1Games <- c(player1Games, head(game$game, 1))
+    
+    player1PointsVectorB1 <- c(player1PointsVectorB1, player1Points)
+    player1GamesB1 <- c(player1GamesB1, head(game$game, 1))
+    
+    scoresVectorB1 <- c(scoresVectorB1, player1Points)
+    scoresGamesB1 <- c(scoresGamesB1, head(game$game, 1))
+    
+    player0Points = sum(game$player0Point)
+  
+    player0PointsVector <- c(player0PointsVector, player0Points)
+    player0Games <- c(player0Games, head(game$game, 1))
+    
+    player0PointsVectorB2 <- c(player0PointsVectorB2, player0Points)
+    player0GamesB2 <- c(player0GamesB2, head(game$game, 1))
+  }
+  
+  scoresVectorB1 <- c(scoresVectorB1, player0Points)
+  scoresGamesB1 <- c(scoresGamesB1, head(game$game, 1))
+}
+
+for (game in mergedGamesB2){
+  
+  player1Points = sum(game$player1Point)
+  player0Points = sum(game$player0Point)
+  
+  if(!grepl("4$", head(game$game, 1))){
+    
+    player1PointsVector <- c(player1PointsVector, player1Points)
+    player1Games <- c(player1Games, head(game$game, 1))
+    
+    player1PointsVectorB2 <- c(player1PointsVectorB2, player1Points)
+    player1GamesB2 <- c(player1GamesB2, head(game$game, 1))
+    
+    scoresVectorB2 <- c(scoresVectorB2, player1Points)
+    scoresGamesB2 <- c(scoresGamesB2, head(game$game, 1))
+    
+    player0PointsVector <- c(player0PointsVector, player0Points)
+    player0Games <- c(player0Games, head(game$game, 1))
+    
+    player0PointsVectorB2 <- c(player0PointsVectorB2, player0Points)
+    player0GamesB2 <- c(player0GamesB2, head(game$game, 1))
+  }
+  
+  scoresVectorB2 <- c(scoresVectorB2, player0Points)
+  scoresGamesB2 <- c(scoresGamesB2, head(game$game, 1))
+}
+
+for (game in mergedGamesB3){
+  
+  player1Points = sum(game$player1Point)
+  player0Points = sum(game$player0Point)
+  
+  if(!grepl("4$", head(game$game, 1))){
+
+    player1PointsVector <- c(player1PointsVector, player1Points)
+    player1Games <- c(player1Games, head(game$game, 1))
+    
+    player1PointsVectorB3 <- c(player1PointsVectorB3, player1Points)
+    player1GamesB3 <- c(player1GamesB3, head(game$game, 1))
+    
+    scoresVectorB3 <- c(scoresVectorB3, player1Points)
+    scoresGamesB3 <- c(scoresGamesB3, head(game$game, 1))
+      
+    player0PointsVector <- c(player0PointsVector, player0Points)
+    player0Games <- c(player0Games, head(game$game, 1))
+    
+    player0PointsVectorB3 <- c(player0PointsVectorB3, player0Points)
+    player0GamesB3 <- c(player0GamesB3, head(game$game, 1))
+  }
+  
+  scoresVectorB3 <- c(scoresVectorB3, player0Points)
+  scoresGamesB3 <- c(scoresGamesB3, head(game$game, 1))
+}
+
+scoresFrameB1 = data.frame(scoresVectorB1, scoresGamesB1)
+scoresFrameB2 = data.frame(scoresVectorB2, scoresGamesB2)
+scoresFrameB3 = data.frame(scoresVectorB3, scoresGamesB3)
+scoresFramePlayer1 = data.frame(player1PointsVector, player1Games)
+scoresFramePlayer0 = data.frame(player0PointsVector, player0Games)
+
+# all blocks
+boxplot(scoresFrameB1$scoresVectorB1, scoresFrameB2$scoresVectorB2, scoresFrameB3$scoresVectorB3,
+        main = "Human scores per block",
+        at = c(1,2,3),
+        names = c("Block 1", "Block 2", "Block 3"),
+        las = 2,
+        col = c("grey", "grey", "grey", "grey", "grey"),
+        border = "black",
+        horizontal = FALSE,
+        notch = FALSE,
+        ylab = "score",
+        ylim = c(0, 20)
+)
+
+boxplot(scoresFramePlayer1$player1PointsVector, scoresFramePlayer0$player0PointsVector,
+        main = "Human scores by starting order",
+        at = c(1,2),
+        names = c("Player 1", "Player 2"),
+        las = 2,
+        col = c("grey", "grey", "grey", "grey", "grey"),
+        border = "black",
+        horizontal = FALSE,
+        notch = FALSE,
+        ylab = "score",
+        ylim = c(0, 20)
+)
+
+
+```
+human scores per block
+```{r pressure, echo=FALSE}
+scoresParticipant1 = c()
+scoresParticipant2 = c()
+scoresParticipant3 = c()
+
+for (game in mergedGames){
+  if(grepl("12$", head(game$game, 1))){
+    player1Points = sum(game$player1Point)
+    player0Points = sum(game$player0Point)
+    scoresParticipant1 <- c(scoresParticipant1, player0Points)
+    scoresParticipant2 <- c(scoresParticipant2, player1Points)
+  }  
+  if(grepl("13$", head(game$game, 1))){
+    player1Points = sum(game$player1Point)
+    player0Points = sum(game$player0Point)
+    scoresParticipant1 <- c(scoresParticipant1, player1Points)
+    scoresParticipant3 <- c(scoresParticipant3, player0Points)
+  }
+  
+  if(grepl("14$", head(game$game, 1))){
+    player0Points = sum(game$player0Point)
+    scoresParticipant1 <- c(scoresParticipant1, player0Points)
+  }
+    
+  if(grepl("23$", head(game$game, 1))){
+    player1Points = sum(game$player1Point)
+    player0Points = sum(game$player0Point)
+    scoresParticipant2 <- c(scoresParticipant2, player0Points)
+    scoresParticipant3 <- c(scoresParticipant3, player1Points)
+  }
+  
+    
+  if(grepl("24$", head(game$game, 1))){
+    player0Points = sum(game$player0Point)
+    scoresParticipant2 <- c(scoresParticipant2, player0Points)
+  }
+  
+    
+  if(grepl("34$", head(game$game, 1))){
+    player0Points = sum(game$player0Point)
+    scoresParticipant3 <- c(scoresParticipant3, player0Points)
+  }
+}
+
+scoresFrameP1 = data.frame(scoresParticipant1, seq(1:21))
+scoresFrameP2 = data.frame(scoresParticipant2, seq(1:19))
+scoresFrameP3 = data.frame(scoresParticipant3, seq(1:20))
+
+# all blocks
+boxplot(scoresFrameP3$scoresParticipant3, scoresFrameP2$scoresParticipant2, scoresFrameP1$scoresParticipant1,
+        main = "human scores agent order effect",
+        at = c(1,2,3),
+        names = c("B1", "B2", "B3"),
+        las = 2,
+        col = c("grey", "grey", "grey", "grey", "grey"),
+        border = "black",
+        horizontal = FALSE,
+        notch = FALSE,
+        ylab = "score",
+        ylim = c(0, 20)
+)
+
+
+```
+human scores human/agent
+```{r}
+scoresHA = c()
+scoresHH = c()
+
+for (game in mergedGames){
+  if(!grepl("4$", head(game$game, 1))){
+    player1Points = sum(game$player1Point)
+    player0Points = sum(game$player0Point)
+    scoresHH <- c(scoresHH, player0Points)
+    scoresHH <- c(scoresHH, player1Points)
+  } else if(grepl("4$", head(game$game, 1))){
+    player0Points = sum(game$player0Point)
+    scoresHA <- c(scoresHA, player0Points)
+  }
+}
+
+scoresFrameHA = data.frame(scoresHA, seq(1:20))
+scoresFrameHH = data.frame(scoresHH, seq(1:40))
+
+# all blocks
+boxplot(scoresFrameHA$scoresHA, scoresFrameHH$scoresHH,
+        main = "Human scores playing vs human / agent",
+        at = c(1,2),
+        names = c("HA", "HH"),
+        las = 2,
+        col = c("grey", "grey", "grey", "grey", "grey"),
+        border = "black",
+        horizontal = FALSE,
+        notch = FALSE,
+        ylab = "score",
+        ylim = c(0, 20)
+)
+
+```
