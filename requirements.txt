@@ -1,5 +1,5 @@
 RStudio == 2023.06.01
-R == 4.2.1
+R == 4.1.2
 magrittr == 2.0.1
 dplyr == 1.1.2
 ggplot2 == 3.4.2
