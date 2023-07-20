@@ -57,9 +57,9 @@ This folder contains:
 
 ### Code
 
-The code for the html, css and javascript files can be found in ... \
-There are no requirements to run this code as it can be run from the browser. \
-It is recommended to run the experiment in FireFox as other browsers prompt an unnecessary download of data in the trial rounds before the first game of the experiment.
+The source files for the html, css and javascript files used at [harmendeweerd.nl/](https://harmendeweerd.nl/research/mod/mod.html) can be found in 'Code' folder. \
+The first page is 'mod.html', where you enter the game and player IDs. All other pages following when pressing the continue buttons on each page. \
+It is recommended to run the experiment in FireFox as other browsers prompt an unnecessary download of data in the trial rounds before the first block of the experiment.
 
 ### Downloading the data
 
