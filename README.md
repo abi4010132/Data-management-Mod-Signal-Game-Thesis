@@ -124,7 +124,7 @@ This folder contains multiple folders:
 <li> 'Block 1', this folder contains the filled in block 1 questionnaires of each participant. </li>
 <li> 'Block 2', this folder contains the filled in block 2 questionnaires of each participant. </li>
 <li> 'Block 3', this folder contains the filled in block 3 questionnaires of each participant. </li>
-<li> 'General', this folder contains the filled in general questionnaires of each participant. </li>
+<li> 'General Questionnaires', this folder contains the filled in general questionnaires of each participant. </li>
 </ul>
 
 The files are named based on the participant ID in the format SXPY, where X is the number of the experiment session and Y is the player number given to the participant in that session. To match the questionnaire answers to the game data of the participants, you have to backtrack using the tables found in [Running the experiment](#running-the-experiment).
