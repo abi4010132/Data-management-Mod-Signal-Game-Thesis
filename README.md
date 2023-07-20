@@ -60,8 +60,8 @@ This folder contains:
 
 ### Code
 
-The source files for the html, css and javascript files used at [harmendeweerd.nl/](https://harmendeweerd.nl/research/mod/mod.html) can be found in 'Code' folder. \
-The first page is 'mod.html', where you enter the game and player IDs. All other pages following when pressing the continue buttons on each page. \
+The source files for the html, css and javascript files used at [harmendeweerd.nl/](https://harmendeweerd.nl/research/mod/mod.html) can be found in 'Code' folder. They can also be downloaded from [harmendeweerd.nl/research/mod/mod_signal.zip](https://www.harmendeweerd.nl/research/mod/mod_signal.zip) \
+The first page is 'mod.html', where you enter the game and player IDs. All other pages follow when pressing the continue buttons on each page. \
 It is recommended to run the experiment in FireFox as other browsers prompt an unnecessary download of data in the trial rounds before the first block of the experiment.
 
 ### Downloading the data
