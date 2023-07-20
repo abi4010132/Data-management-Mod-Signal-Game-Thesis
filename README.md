@@ -15,11 +15,12 @@ Participants were seated in the same room separated by barriers. The barriers we
 To run the experiment you need to have access to the internet through a webbrowser (preferably FireFox). \
 To run the data analysis RStudio version 2023.06.01 and R version 4.1.2. The data analysis can simply be run by running all the cells in order for each R Markdown file.
 
-### Running the game
+### Running the experiment
 
 Running the experiment can be done at [harmendeweerd.nl/research/mod/mod.html](https://harmendeweerd.nl/research/mod/mod.html) \
-Here in the Game field, you can enter the ids of the 3 games to be played separated by a comma e.g. game1,game2,game3. Make sure that these values are unique and have not been used yet. \
-Then in the Player ID field, the id of the player needs to be entered for each game separated by a comma. Here the player ID can be either 0, 1 or 3. If the player ID is 1 this means that the player starts signalling in the first round and if the player ID is 0, the player receives the signal in the first round. Player ID 3 is used when you want to let the agent play, the agent always starts as the signaler in the first round. Make sure that only two players join the game and that one player has ID 0 and the other player has ID 1 if it is a human or 3 if it should be the agent. \
+Here in the Game field, you can enter the ids of the 3 games to be played by a player, separated by commas e.g. game1,game2,game3. Make sure that these values are unique and have not been used yet. \
+Then in the Player ID field, the ids of the player needs to be entered for each game separated by commas. Here the player ID can be either 0, 1 or 3. If the player ID is 1 this means that the player starts signalling in the first round. If the player ID is 0, the player receives the signal in the first round. Player ID 3 is used when you want to have the implemented agent play, the agent always starts as the signaler in the first round. The agent plays automatically by simulating and does not need any supervision after starting the first block. \
+Make sure that only two players join the game and that one player has ID 0 and the other player has ID 1 if it is a human or 3 if it should be the agent. \
 In the tables below you can find an example of how I ordered the games and player IDs.
 The first table contains which player ids the player should have in each block and the second table contains the game ids for each block, where X is the session number of the experiment.
 |  | Block 1 | Block 2 | Block 3 |
@@ -73,9 +74,8 @@ The data can be downloaded by going to [https://harmendeweerd.nl/research/mod/do
 
 #### Game data
 
-The game data obtained in my experiment can be found in the 'Data' folder.
-the 'game_data.php' file contains the raw data that was obtained from downloading the data. \
-The data contains two entries per round of every game, one for the signaler and one for the responder.
+The game data obtained in my experiment can be found in the 'Data' folder. \
+The 'game_data.php' file contains the raw data that was obtained from downloading the data. The data contains two entries per round of every game, one for the signaler and one for the responder. \
 The data contains comma separated values of the following columns:
 <ul>
 <li> 'game', the game ID. </li>
@@ -89,8 +89,8 @@ From the data alone it is not possible to tell who the signaler or responder is 
 
 #### Questionnaire data
 
-The data for the questionnaires can be found in the 'Data' folder as well as the 'Questionnaires' folder.
-The numerical values that could be extracted from the questionnaires have been compiled and sorted in the 'questionnaire_data.csv' file.
+The data for the questionnaires can be found in the 'Data' folder as well as the 'Questionnaires' folder. \
+The numerical values that could be extracted from the questionnaires have been extracted and sorted in the 'questionnaire_data.csv' file. \
 In this file each row represents a participant, the columns in this file are represented as follows: 
 <ul>
 <li> 'Participant', this contains the participant ID in the format SXPY, where X is the number of the experiment session and Y is the player number given to the participant in that session. </li>
@@ -124,7 +124,7 @@ This folder contains multiple folders:
 <li> 'General', this folder contains the filled in general questionnaires of each participant. </li>
 </ul>
 
-The files are named based on the participant ID in the format SXPY, where X is the number of the experiment session and Y is the player number given to the participant in that session. To track these answers back to the game_data you would have to backtrack using the tables found in Game Data.
+The files are named based on the participant ID in the format SXPY, where X is the number of the experiment session and Y is the player number given to the participant in that session. To track these answers back to the game_data you have to backtrack using the tables found in [Running the experiment](#running-the-experiment).
 
 ### Analysis
 
