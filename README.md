@@ -5,11 +5,12 @@ If you have any questions you can send an email to a.raveenthiran@student.rug.nl
 
 ## Experiment setup
 
-In my experiment a total of 21 participants played 3 blocks of the Mod-Signal Game, where each block lasted 20 rounds. After every block the participants were asked to fill in questionnaires regarding their strategy and their co-player's strategy. At the end of the experiment they were also asked to fill in a general questionnaire containing some general questions. The text in the questionnaires and the instructions of the experiment were carefully designed to prevent any priming of cooperative or competitive behaviour. The following subsections contain more information on how to replicate the experiment.
+In my experiment a total of 21 participants played 3 blocks of the Mod-Signal Game, where each block lasted 20 rounds. Per session there were 3 participants that played the Mod-Signal Game with each other, in every block one of the participants had to play with an agent while the other 2 played with each other. To fool the participants into thinking they were playing with a human a confederate was present. \
+After every block the participants were asked to fill in questionnaires regarding their strategy and their co-player's strategy. At the end of the experiment they were also asked to fill in a general questionnaire containing some general questions. The text in the questionnaires and the instructions of the experiment were carefully designed to prevent any priming of cooperative or competitive behaviour. The following subsections contain more information on how to replicate the experiment.
 
 ### Experiment design choices
 
-Participants were seated in the same room separated by barriers. The barriers were used as a measure to prevent and discourage participants from looking at other participants' screen. The participants were also asked to put on headphones at the start of the experiment, this was done to make the mouse clicks less audible as the mouse clicks can be used to determine that they are playing with a human if the mouse clicks are followed by their game screen updating. A confederate was also present that pretended to play the Mod-Signal Game as a fourth participant. Since the Mod-Signal Game is a 2-player game and there are only 3 participants per session, the confederate is present to fool people into thinking that they are playing with a human when they are actually playing with the agent. To make sure that the participants are fooled, the confederate would pretend to play the game by clicking the mouse as well as pretend to fill in the questionnaires. To make sure this happened smoothly, the experimenter kept track of the agent and would message the confederate through whatsapp to notify them when they should start/stop clicking and when they should pretend to fill in the questionnaires.
+Participants were seated in the same room separated by barriers. The barriers were used as a measure to prevent and discourage participants from looking at other participants' screen. The participants were also asked to put on headphones at the start of the experiment, this was done to make the mouse clicks less audible as the mouse clicks can be used to determine that they are playing with a human if the mouse clicks are followed by their game screen updating. \ A confederate was also present that pretended to play the Mod-Signal Game as a fourth participant. Since the Mod-Signal Game is a 2-player game and there are only 3 participants per session, the confederate is present to fool people into thinking that they are playing with a human when they are actually playing with the agent. To make sure that the participants are fooled, the confederate would pretend to play the game by clicking the mouse as well as pretend to fill in the questionnaires. To make sure this happened smoothly, the experimenter kept track of the agent and would message the confederate through whatsapp to notify them when they should start/stop clicking and when they should pretend to fill in the questionnaires.
 
 ### Requirements
 To run the experiment you need to have access to the internet through a webbrowser (preferably FireFox). \
@@ -35,9 +36,11 @@ The first table contains which player ids the player should have in each block a
 | p1vp2: sX_g12 | p1vp3: sX_g13 | p2vp3: sX_g23 |
 | p3vagent: sX_g34 | p2vsagent: sX_g24 | p1vagent: sX_g14 |
 
-For example, the input for the Game and Player ID fields for player 2 in session 1 of the experiment would be: \
-Game: s1_g12,s1_g24,s1_g23 \
-Player ID: 1,0,0 
+For example, the input for the Game and Player ID fields for each player and the agent in session 1 of the experiment would be: 
+| | Player 1 | Player 2 | Player 3 | Player 4 (agent) |
+| --- | --- | --- | --- | --- |
+| Game | s1_g12,s1_g13,s1_g14 | s1_g12,s1_g24,s1_g23 | s1_g34,s1_g13,s1_g23 |  s1_g34,s1_g24,s1_g14 |
+| Player ID | 0,1,0 | 1,0,0 | 0,0,1 | 3,3,3 |
 
 After filling in the fields you can press start and follow the instructions to play the game.
 
