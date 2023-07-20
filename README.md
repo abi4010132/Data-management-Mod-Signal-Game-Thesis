@@ -13,7 +13,7 @@ Participants were seated in the same room separated by barriers. The barriers we
 
 ### Requirements
 To run the experiment you need to have access to the internet through a webbrowser (preferably FireFox). \
-To run the data analysis RStudio version 2023.06.01 and R version 4.1.2. The data analysis can simply be run by running all the cells in order for each R Markdown file.
+To run the data analysis the required versions of RStudio, R and R packages are defined in the 'requirements.txt' file. The code in the 'Data Analysis' folder can be run in RStudio by running all code cells of a file in order.
 
 ### Running the experiment
 
