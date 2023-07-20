@@ -91,7 +91,7 @@ From the data alone it is not possible to tell who the signaler or responder is 
 
 The data for the questionnaires can be found in the 'Data' folder as well as the 'Questionnaires' folder.
 The numerical values that could be extracted from the questionnaires have been compiled and sorted in the 'questionnaire_data.csv' file.
-This file contains comma separated values of the following columns: 
+In this file each row represents a participant, the columns in this file are represented as follows: 
 <ul>
 <li> 'Participant', this contains the participant ID in the format SXPY, where X is the number of the experiment session and Y is the player number given to the participant in that session. </li>
 <li> 'P-beauty', contains the values (ranging from 0-100) entered in the p-beauty contest question by the participants. </li>
