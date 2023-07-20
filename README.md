@@ -129,7 +129,7 @@ The files are named based on the participant ID in the format SXPY, where X is t
 ### Analysis
 
 The data analysis that was done in my thesis is found in the 'Data Analysis' folder. \
-The contains R markdown files which are run separately. Make sure to run the first cells for data processing before running the other cells as the data processing differs per file depending on the analysis that is done within that file. \
+This folder contains R markdown files which are run separately. Make sure to run all the cells in order as the data processing differs per file depending on the analysis that is done. \
 The data analysis is separated in to the following files:
 <ul>
 <li> 'signalDifferences.rmd', contains graphs related to the signal/choice/response distribution and the choice/response - signal differences. </li>
@@ -139,5 +139,5 @@ The data analysis is separated in to the following files:
 <li> 'statistical_tests.rmd', contains the statistical tests that were performed in the analysis. </li>
 </ul>
 
-To run the code make sure that the 'game_data.php' and 'questionnaire_data.csv' files are in the same folder as the code, for convenience I've added the data of my experiment in the 'Data Analysis' folder.
+Make sure that the 'game_data.php' and 'questionnaire_data.csv' files are in the same folder as the code before you run it. For convenience I've added the data of my experiment in the 'Data Analysis' folder.
 
