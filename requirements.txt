@@ -1,0 +1,6 @@
+RStudio == 2023.06.01
+R == 4.2.1
+magrittr == 2.0.1
+dplyr == 1.1.2
+ggplot2 == 3.4.2
+stringr == 1.5.0
