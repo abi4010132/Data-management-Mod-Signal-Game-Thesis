@@ -124,7 +124,7 @@ This folder contains multiple folders:
 <li> 'General', this folder contains the filled in general questionnaires of each participant. </li>
 </ul>
 
-The files are named based on the participant ID in the format SXPY, where X is the number of the experiment session and Y is the player number given to the participant in that session. To track these answers back to the game_data you have to backtrack using the tables found in [Running the experiment](#running-the-experiment).
+The files are named based on the participant ID in the format SXPY, where X is the number of the experiment session and Y is the player number given to the participant in that session. To match the questionnaire answers to the game data of the participants, you have to backtrack using the tables found in [Running the experiment](#running-the-experiment).
 
 ### Analysis
 
